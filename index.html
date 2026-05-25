@@ -506,7 +506,7 @@
 })();
 
 // ── AUTH ──
-const PASS_HASH = 'b4e4a7130b55b1daf1f97e82b2a46d30e0c953278658ca7d3b36f2b64fb21b3c';
+const PASS_HASH = '6e5caf8d9b2fcb628661aa4c7ea57178c8b896a33adbf9b166333f5f26b64904';
 async function sha256(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
