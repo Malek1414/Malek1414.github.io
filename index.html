@@ -399,82 +399,110 @@
 <input type="file" id="importFile" accept=".json" style="display:none" onchange="handleImport(event)">
 
 <script>
-// ── LUMINOUS B&W BACKGROUND ──
+// ── LUMINOUS MARBLE BACKGROUND (WebGL) ──
 (function() {
   const canvas = document.getElementById('bgCanvas');
-  const ctx = canvas.getContext('2d');
-  let W, H, orbs = [], particles = [];
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) { canvas.style.display = 'none'; return; }
 
-  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  const vs = `attribute vec4 aPos; void main(){ gl_Position = aPos; }`;
 
-  function initScene() {
-    orbs = [];
-    for (let i = 0; i < 8; i++) {
-      orbs.push({
-        x: Math.random() * W, y: Math.random() * H,
-        r: Math.random() * 380 + 180,
-        vx: (Math.random() - 0.5) * 0.25,
-        vy: (Math.random() - 0.5) * 0.25,
-        baseOpacity: Math.random() * 0.07 + 0.03,
-        pulse: Math.random() * Math.PI * 2,
-        pulseSpeed: Math.random() * 0.006 + 0.002
-      });
+  const fs = `
+    precision highp float;
+    uniform vec2 u_res;
+    uniform float u_time;
+
+    vec3 mod289v3(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
+    vec2 mod289v2(vec2 x){return x-floor(x*(1.0/289.0))*289.0;}
+    vec3 permute(vec3 x){return mod289v3(((x*34.0)+1.0)*x);}
+
+    float snoise(vec2 v){
+      const vec4 C=vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);
+      vec2 i=floor(v+dot(v,C.yy));
+      vec2 x0=v-i+dot(i,C.xx);
+      vec2 i1=(x0.x>x0.y)?vec2(1.0,0.0):vec2(0.0,1.0);
+      vec4 x12=x0.xyxy+C.xxzz;
+      x12.xy-=i1;
+      i=mod289v2(i);
+      vec3 p=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));
+      vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0);
+      m=m*m; m=m*m;
+      vec3 x2=2.0*fract(p*C.www)-1.0;
+      vec3 h=abs(x2)-0.5;
+      vec3 ox=floor(x2+0.5);
+      vec3 a0=x2-ox;
+      m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);
+      vec3 g;
+      g.x=a0.x*x0.x+h.x*x0.y;
+      g.yz=a0.yz*x12.xz+h.yz*x12.yw;
+      return 130.0*dot(m,g);
     }
-    particles = [];
-    for (let i = 0; i < 180; i++) {
-      particles.push({
-        x: Math.random() * W, y: Math.random() * H,
-        r: Math.random() * 1.1 + 0.2,
-        a: Math.random(),
-        da: (Math.random() - 0.5) * 0.009,
-        vy: Math.random() * 0.05 + 0.008
-      });
+
+    void main(){
+      vec2 st = gl_FragCoord.xy / u_res;
+      st = st * 2.0 - 1.0;
+      st.x *= u_res.x / u_res.y;
+      float t = u_time * 0.12;
+
+      float n1 = snoise(st * 1.5 + vec2(t, t * 0.5));
+      float n2 = snoise(st * 2.5 - vec2(t * 0.8, -t * 0.3));
+      vec2 warp = st + vec2(n1, n2) * 0.5;
+      float dist = length(warp);
+      float field = sin(dist * 20.0 - t * 5.0) + snoise(warp * 4.0) * 1.5;
+      float bands = fract(field * 2.0);
+      float lt = 0.15;
+      float lines = smoothstep(lt, lt + 0.05, bands) * smoothstep(1.0 - lt, 1.0 - lt - 0.05, bands);
+      float grain = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
+
+      vec3 bg   = vec3(0.03, 0.03, 0.03);
+      vec3 vein = vec3(0.13, 0.13, 0.13);
+      vec3 col  = mix(bg, vein, lines);
+      col -= grain * 0.015;
+
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `;
+
+  function compileShader(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { gl.deleteShader(s); return null; }
+    return s;
+  }
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, compileShader(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, compileShader(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog); gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,1, 1,1, -1,-1, 1,-1]), gl.STATIC_DRAW);
+  const aPos = gl.getAttribLocation(prog, 'aPos');
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+  const uRes  = gl.getUniformLocation(prog, 'u_res');
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+
+  function resize() {
+    const dpr = window.devicePixelRatio || 1;
+    const w = window.innerWidth * dpr, h = window.innerHeight * dpr;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w; canvas.height = h;
+      gl.viewport(0, 0, w, h);
     }
   }
 
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-
-    orbs.forEach(o => {
-      o.x += o.vx; o.y += o.vy;
-      o.pulse += o.pulseSpeed;
-      if (o.x < -o.r) o.x = W + o.r;
-      if (o.x > W + o.r) o.x = -o.r;
-      if (o.y < -o.r) o.y = H + o.r;
-      if (o.y > H + o.r) o.y = -o.r;
-
-      const op = o.baseOpacity + Math.sin(o.pulse) * 0.018;
-      const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
-      g.addColorStop(0, `rgba(255,255,255,${op})`);
-      g.addColorStop(0.35, `rgba(255,255,255,${op * 0.45})`);
-      g.addColorStop(0.7, `rgba(255,255,255,${op * 0.12})`);
-      g.addColorStop(1, 'rgba(255,255,255,0)');
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
-      ctx.fill();
-    });
-
-    particles.forEach(p => {
-      p.a += p.da;
-      if (p.a > 1 || p.a < 0.05) p.da *= -1;
-      p.y += p.vy;
-      if (p.y > H) { p.y = 0; p.x = Math.random() * W; }
-      ctx.save();
-      ctx.globalAlpha = Math.max(0.05, Math.min(1, p.a));
-      ctx.fillStyle = '#ffffff';
-      if (p.r > 0.75) { ctx.shadowBlur = 5; ctx.shadowColor = '#ffffff'; }
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    });
-
-    requestAnimationFrame(draw);
+  function render(ms) {
+    resize();
+    gl.uniform2f(uRes, canvas.width, canvas.height);
+    gl.uniform1f(uTime, ms * 0.001);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
   }
 
-  window.addEventListener('resize', () => { resize(); initScene(); });
-  resize(); initScene(); draw();
+  requestAnimationFrame(render);
 })();
 
 // ── AUTH ──
