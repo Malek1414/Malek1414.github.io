@@ -728,8 +728,8 @@ function renderProjects(){
       <div class="project-title">${escHtml(p.title)}</div>
       <div class="project-desc">${escHtml(p.description)}</div>
       <div class="project-links">
-        ${p.demo?`<a href="${escHtml(p.demo)}" target="_blank" rel="noopener noreferrer" class="project-link">↗ Live Demo</a>`:''}
-        ${p.github?`<a href="${escHtml(p.github)}" target="_blank" rel="noopener noreferrer" class="project-link">⌥ GitHub</a>`:''}
+        ${safeUrl(p.demo)?`<a href="${escHtml(safeUrl(p.demo))}" target="_blank" rel="noopener noreferrer" class="project-link">↗ Live Demo</a>`:''}
+        ${safeUrl(p.github)?`<a href="${escHtml(safeUrl(p.github))}" target="_blank" rel="noopener noreferrer" class="project-link">⌥ GitHub</a>`:''}
       </div>
       ${isAdmin?`<div class="project-actions"><button class="ach-btn" onclick="openProjectModal(${p.id})">✎ Edit</button><button class="ach-btn danger" onclick="deleteProject(${p.id})">✕ Delete</button></div>`:''}
     </div>`).join(''):'<p style="color:var(--text2)">No projects yet.</p>';
@@ -755,8 +755,9 @@ function openProjectModal(editId){
     const demo=document.getElementById('mf_demo').value.trim();
     const github=document.getElementById('mf_github').value.trim();
     if(!title||!tag||!description){ toast('Title, tag, and description are required.'); return false; }
-    if(editId){ Object.assign(data.projects.find(p=>p.id===editId),{title,tag,description,demo,github}); }
-    else { data.projects.push({id:Date.now(),title,tag,description,demo,github}); }
+    const safeDemo=safeUrl(demo), safeGithub=safeUrl(github);
+    if(editId){ Object.assign(data.projects.find(p=>p.id===editId),{title,tag,description,demo:safeDemo,github:safeGithub}); }
+    else { data.projects.push({id:Date.now(),title,tag,description,demo:safeDemo,github:safeGithub}); }
     save('projects',data.projects); renderProjects(); toast(editId?'Project updated!':'Project added!');
   });
 }
@@ -786,7 +787,7 @@ async function importFromGitHub() {
       if (!checked.length) { toast('No new repos selected.'); return false; }
       checked.forEach(cb => {
         const r = JSON.parse(cb.dataset.repo);
-        data.projects.push({ id: Date.now() + Math.random(), title: r.name, tag: r.lang || 'Code', description: r.desc || r.name, demo: r.demo, github: r.url });
+        data.projects.push({ id: Date.now() + Math.random(), title: r.name, tag: r.lang || 'Code', description: r.desc || r.name, demo: safeUrl(r.demo), github: safeUrl(r.url) });
       });
       save('projects', data.projects); renderProjects(); toast(`Added ${checked.length} repo(s)!`);
     });
@@ -878,7 +879,8 @@ document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',
 document.addEventListener('click',e=>{ const nl=document.getElementById('navLinks'); if(nl.classList.contains('open')&&!document.getElementById('navbar').contains(e.target))nl.classList.remove('open'); });
 
 // ── UTILS ──
-function escHtml(str){ if(!str)return''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escHtml(str){ if(!str)return''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function safeUrl(u){ if(!u)return''; try{ const p=new URL(String(u),location.href); return['http:','https:','mailto:'].includes(p.protocol)?String(u):''; }catch{ return''; } }
 
 // ── INIT ──
 function renderAll(){ renderHero(); renderSkills(); renderAchievements(); renderProjects(); }
