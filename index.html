@@ -368,16 +368,14 @@
           </div>
         </a>
       </div>
-      <form class="contact-form" action="https://formsubmit.co/malek.korashi@gmail.com" method="POST">
-        <input type="hidden" name="_cc" value="malek.hassan@rwth-aachen.de">
-        <input type="hidden" name="_subject" value="New message from your portfolio">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_next" value="https://malek1414.github.io/#contact">
-        <div class="form-group"><label>Your Name</label><input type="text" name="name" placeholder="Jane Smith" required></div>
-        <div class="form-group"><label>Your Email</label><input type="email" name="email" placeholder="jane@example.com" required></div>
+      <form class="contact-form" id="contactForm" onsubmit="submitContactForm(event)">
+        <input type="hidden" name="access_key" id="w3f_key">
+        <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+        <div class="form-group"><label>Your Name</label><input type="text" name="name" placeholder="Jane Smith" required autocomplete="name"></div>
+        <div class="form-group"><label>Your Email</label><input type="email" name="email" placeholder="jane@example.com" required autocomplete="email"></div>
         <div class="form-group"><label>Message</label><textarea name="message" placeholder="What's on your mind?" required></textarea></div>
-        <button type="submit" class="submit-btn">Send Message</button>
+        <div id="formMsg" style="display:none"></div>
+        <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
       </form>
     </div>
   </div>
@@ -821,8 +819,54 @@ function handleImport(e){
 }
 
 // ── CONTACT ──
+const WEB3FORMS_KEY = 'b7ef4fed-d9f4-4b3f-8700-00000000000';
+
 function copyText(e,text){ e.preventDefault(); e.stopPropagation(); navigator.clipboard.writeText(text).then(()=>toast('Copied: '+text)).catch(()=>toast('Copy failed')); }
-function handleContactForm(e) { /* handled by native form POST to formsubmit.co */ }
+
+async function submitContactForm(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn = document.getElementById('submitBtn');
+  const msgEl = document.getElementById('formMsg');
+
+  if (!WEB3FORMS_KEY || WEB3FORMS_KEY.includes('000000000')) {
+    showFormMsg('error', 'Form not configured yet — email me directly at malek.korashi@gmail.com');
+    return;
+  }
+
+  document.getElementById('w3f_key').value = WEB3FORMS_KEY;
+  btn.disabled = true; btn.textContent = 'Sending…';
+  msgEl.style.display = 'none';
+
+  const formData = new FormData(form);
+  formData.append('subject', 'New message from your portfolio');
+  formData.append('from_name', 'Portfolio Contact Form');
+  formData.append('cc', 'malek.hassan@rwth-aachen.de');
+
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData });
+    const json = await res.json();
+    if (json.success) {
+      showFormMsg('success', "Message sent! I'll get back to you soon.");
+      form.reset();
+    } else {
+      showFormMsg('error', 'Something went wrong. Please email me directly.');
+    }
+  } catch {
+    showFormMsg('error', 'Network error. Please email me at malek.korashi@gmail.com');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Send Message';
+  }
+}
+
+function showFormMsg(type, text) {
+  const el = document.getElementById('formMsg');
+  el.style.cssText = `display:block;padding:0.75rem 1rem;border-radius:6px;font-size:0.84rem;margin-bottom:0.25rem;` +
+    (type === 'success'
+      ? 'background:rgba(67,233,123,0.08);border:1px solid rgba(67,233,123,0.2);color:#43e97b;'
+      : 'background:rgba(255,68,68,0.08);border:1px solid rgba(255,68,68,0.2);color:#ff4444;');
+  el.textContent = text;
+}
 
 // ── REVEAL / NAV ──
 function initReveal(){
@@ -831,6 +875,7 @@ function initReveal(){
 }
 function toggleMenu(){ document.getElementById('navLinks').classList.toggle('open'); }
 document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('open')));
+document.addEventListener('click',e=>{ const nl=document.getElementById('navLinks'); if(nl.classList.contains('open')&&!document.getElementById('navbar').contains(e.target))nl.classList.remove('open'); });
 
 // ── UTILS ──
 function escHtml(str){ if(!str)return''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
