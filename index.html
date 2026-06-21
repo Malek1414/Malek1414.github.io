@@ -150,6 +150,15 @@
   .project-link:hover { opacity: 0.5; }
   .project-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
 
+  /* DEMO MEDIA (project + achievement evidence — RobertHQ-style inline showcase) */
+  .card-media { margin-bottom: 1.1rem; display: flex; gap: 0.6rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -ms-overflow-style: none; }
+  .card-media::-webkit-scrollbar { display: none; }
+  .media-item { position: relative; flex: 0 0 100%; scroll-snap-align: start; }
+  .card-media.multi .media-item { flex: 0 0 88%; }
+  .media-frame { position: relative; width: 100%; aspect-ratio: 16 / 10; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--bg3); }
+  .media-frame video, .media-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .media-caption { position: absolute; left: 0.5rem; bottom: 0.5rem; z-index: 2; font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; font-weight: 600; background: rgba(0,0,0,0.6); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); padding: 0.22rem 0.5rem; border-radius: 3px; }
+
   #contact { padding: 6rem 0 5rem; border-top: 1px solid var(--border); }
   .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
   .contact-info { display: flex; flex-direction: column; gap: 0.6rem; }
@@ -248,7 +257,7 @@
 
 <canvas id="bgCanvas"></canvas>
 
-<div id="authOverlay">
+<div id="authOverlay" class="hidden">
   <div class="auth-box">
     <div class="auth-logo">✦</div>
     <div class="auth-title">Malek Hussein</div>
@@ -627,17 +636,21 @@ const DEFAULTS = {
     { id:18, name:'Git',              category:'DevOps',   color:'#f05032' }
   ],
   achievements: [
-    { id:1, title:'Built ORACLE — AI Claims Adjuster', date:'2026', description:'Built a production AI system that fully automates insurance claims adjudication. Stack: Next.js 16, React 19, TypeScript, Supabase, Tailwind v4, Framer Motion, Recharts, Zustand, and the Anthropic Claude API. Handles end-to-end PDF ingestion and autonomous claim decisions.' },
-    { id:2, title:'Built finance-wizz — AI Financial Advisor', date:'2025', description:'Shipped a full-stack AI financial advisor. Backend: Express + TypeScript + PostgreSQL + Anthropic SDK with PDF parsing via Multer. Frontend: React 19 + Vite + TanStack Query + D3 + Recharts + Framer Motion.' },
+    { id:1, title:'Built ORACLE — AI Claims Adjuster', date:'2026', description:'Built a production AI system that fully automates insurance claims adjudication. Stack: Next.js 16, React 19, TypeScript, Supabase, Tailwind v4, Framer Motion, Recharts, Zustand, and the Anthropic Claude API. Handles end-to-end PDF ingestion and autonomous claim decisions.', media:'assets/demos/oracle.mp4', poster:'assets/demos/oracle.jpg', mediaLabel:'Autonomous claim adjudication' },
+    { id:2, title:'Built finance-wizz — AI Financial Advisor', date:'2025', description:'Shipped a full-stack AI financial advisor. Backend: Express + TypeScript + PostgreSQL + Anthropic SDK with PDF parsing via Multer. Frontend: React 19 + Vite + TanStack Query + D3 + Recharts + Framer Motion.', media:'assets/demos/finance-wizz.mp4', poster:'assets/demos/finance-wizz.jpg', mediaLabel:'Document-grounded analysis' },
     { id:3, title:'RWTH Aachen — Ongoing Studies', date:'2024', description:'Studying at RWTH Aachen University, one of Europe\'s top technical universities, while building production AI products in parallel.' }
   ],
   projects: [
-    { id:1, title:'ORACLE', tag:'AI / Insurance', description:'A production AI insurance claims adjuster that autonomously processes claims end-to-end. Built with Next.js 16, React 19, TypeScript, Supabase, Tailwind v4, Framer Motion, Recharts, Zustand, pdf-lib, and the Anthropic Claude API.', demo:'', github:'https://github.com/Malek1414/ORACLE' },
-    { id:2, title:'finance-wizz', tag:'AI / Fintech', description:'Full-stack AI financial advisor. Upload financial documents and get Claude-powered analysis. Backend: Express + TypeScript + PostgreSQL + Anthropic SDK. Frontend: React 19 + Vite + TanStack Query + D3 + Recharts + Framer Motion.', demo:'', github:'https://github.com/Malek1414/finance-wizz' },
-    { id:3, title:'Personal Portfolio', tag:'Web', description:'This portfolio — luminous B&W live background, password-protected admin mode, GitHub repo importer, editable content, and localStorage persistence. Built with vanilla HTML/CSS/JS.', demo:'https://malek1414.github.io', github:'https://github.com/Malek1414/Malek1414.github.io' }
+    { id:1, title:'ORACLE', tag:'AI / Insurance', description:'A voice-first AI insurance claim agent. The claimant describes the accident out loud — Oracle runs the intake, extracts the details, files the FNOL, and hands a ready packet to the adjuster. Average claim: 2:44. Built with Next.js, React 19, TypeScript, Supabase, and the Anthropic Claude API.', demo:'', github:'https://github.com/Malek1414/ORACLE', media:[ {src:'assets/showcase/oracle/oracle-hero.png', caption:'Two minutes, voice-first'}, {src:'assets/showcase/oracle/oracle-file-claim.png', caption:'Describe the accident'}, {src:'assets/showcase/oracle/oracle-dashboard.png', caption:'Live claim dashboard'}, {src:'assets/demos/oracle.mp4', caption:'Live walkthrough', poster:'assets/showcase/oracle/oracle-hero.png'} ] },
+    { id:2, title:'finance-wizz', tag:'AI / Fintech', description:'Full-stack AI financial advisor. Upload financial documents and get Claude-powered, document-grounded analysis. Backend: Express + TypeScript + PostgreSQL + Anthropic SDK. Frontend: React 19 + Vite + TanStack Query + D3 + Recharts + Framer Motion.', demo:'', github:'https://github.com/Malek1414/finance-wizz', media:[ {src:'assets/demos/finance-wizz.mp4', caption:'Document-grounded analysis', poster:'assets/demos/finance-wizz.jpg'} ] },
+    { id:3, title:'Loon Link', tag:'Web / Scraping', description:'A website scraper that turns messy pages into clean, structured data — point it at a site and pull exactly the fields you need.', demo:'', github:'', media:[ {src:'assets/demos/loon-link.mp4', caption:'Scrape walkthrough'} ] },
+    { id:4, title:'Second Brain', tag:'AI / Productivity', description:'An AI second brain that captures notes and ideas and syncs them straight into an Obsidian vault — your knowledge, organised and searchable across the graph.', demo:'', github:'', media:[ {src:'assets/demos/second-brain.mp4', caption:'Capture → Obsidian vault'} ] },
+    { id:5, title:'HUSTLR', tag:'iOS / Productivity', description:'A native iOS app for building daily momentum and tracking output, built with Swift.', demo:'', github:'', media:[ {src:'assets/demos/hustlr.mp4', caption:'Daily momentum tracking'} ] },
+    { id:6, title:'Solana Arbitrage Bot', tag:'Web3 / Trading', description:'A Solana arbitrage bot that scans DEXes for price gaps and executes trades — grounded in original research on on-chain market microstructure.', demo:'', github:'', media:[ {src:'assets/demos/solana-arb.mp4', caption:'Live arbitrage scan'} ] },
+    { id:7, title:'Personal Portfolio', tag:'Web', description:'This site — luminous B&W live background, a rotating 3D signature coin, admin edit mode, a GitHub repo importer, and inline project demos. Built with vanilla HTML, CSS, and JS.', demo:'https://malek1414.github.io', github:'https://github.com/Malek1414/Malek1414.github.io' }
   ]
 };
-const DATA_VERSION = '3';
+const DATA_VERSION = '5';
 if (localStorage.getItem('mh_data_version') !== DATA_VERSION) {
   ['tagline','intro','skills','achievements','projects'].forEach(k => localStorage.removeItem('mh_'+k));
   localStorage.setItem('mh_data_version', DATA_VERSION);
@@ -734,6 +747,7 @@ function renderAchievements(){
   const tl=document.getElementById('achievementsTimeline');
   tl.innerHTML=data.achievements.length?data.achievements.map(a=>`
     <div class="achievement-card">
+      ${cardMediaHtml(a)}
       <div class="ach-header"><div class="ach-title">${escHtml(a.title)}</div><div class="ach-date">${escHtml(a.date)}</div></div>
       <div class="ach-desc">${escHtml(a.description)}</div>
       ${isAdmin?`<div class="ach-actions"><button class="ach-btn" onclick="openAchievementModal(${a.id})">✎ Edit</button><button class="ach-btn danger" onclick="deleteAchievement(${a.id})">✕ Delete</button></div>`:''}
@@ -750,13 +764,14 @@ function openAchievementModal(editId){
   openGenericModal(editId?'Edit Achievement':'Add Achievement',`
     <div class="modal-field"><label>Title *</label><input id="mf_title" value="${ex?escHtml(ex.title):''}" placeholder="e.g. Built X"></div>
     <div class="modal-field"><label>Date *</label><input id="mf_date" value="${ex?escHtml(ex.date):''}" placeholder="e.g. 2024"></div>
-    <div class="modal-field"><label>Description *</label><textarea id="mf_desc">${ex?escHtml(ex.description):''}</textarea></div>`,()=>{
+    <div class="modal-field"><label>Description *</label><textarea id="mf_desc">${ex?escHtml(ex.description):''}</textarea></div>${mediaFields(ex)}`,()=>{
     const title=document.getElementById('mf_title').value.trim();
     const date=document.getElementById('mf_date').value.trim();
     const description=document.getElementById('mf_desc').value.trim();
     if(!title||!date||!description){ toast('All fields are required.'); return false; }
-    if(editId){ Object.assign(data.achievements.find(a=>a.id===editId),{title,date,description}); }
-    else { data.achievements.unshift({id:Date.now(),title,date,description}); }
+    const m=readMediaFields();
+    if(editId){ Object.assign(data.achievements.find(a=>a.id===editId),{title,date,description,...m}); }
+    else { data.achievements.unshift({id:Date.now(),title,date,description,...m}); }
     save('achievements',data.achievements); renderAchievements(); toast(editId?'Achievement updated!':'Achievement added!');
   });
 }
@@ -766,6 +781,7 @@ function renderProjects(){
   const grid=document.getElementById('projectsGrid');
   grid.innerHTML=data.projects.length?data.projects.map(p=>`
     <div class="project-card">
+      ${cardMediaHtml(p)}
       <span class="project-tag">${escHtml(p.tag)}</span>
       <div class="project-title">${escHtml(p.title)}</div>
       <div class="project-desc">${escHtml(p.description)}</div>
@@ -790,7 +806,7 @@ function openProjectModal(editId){
     <div class="modal-field"><label>Tag / Category *</label><input id="mf_tag" value="${ex?escHtml(ex.tag):''}" placeholder="e.g. Web, AI"></div>
     <div class="modal-field"><label>Description *</label><textarea id="mf_desc">${ex?escHtml(ex.description):''}</textarea></div>
     <div class="modal-field"><label>Live Demo URL</label><input id="mf_demo" value="${ex?escHtml(ex.demo):''}" placeholder="https://..."></div>
-    <div class="modal-field"><label>GitHub URL</label><input id="mf_github" value="${ex?escHtml(ex.github||''):''}" placeholder="https://github.com/..."></div>`,()=>{
+    <div class="modal-field"><label>GitHub URL</label><input id="mf_github" value="${ex?escHtml(ex.github||''):''}" placeholder="https://github.com/..."></div>${mediaFields(ex)}`,()=>{
     const title=document.getElementById('mf_title').value.trim();
     const tag=document.getElementById('mf_tag').value.trim();
     const description=document.getElementById('mf_desc').value.trim();
@@ -798,8 +814,9 @@ function openProjectModal(editId){
     const github=document.getElementById('mf_github').value.trim();
     if(!title||!tag||!description){ toast('Title, tag, and description are required.'); return false; }
     const safeDemo=safeUrl(demo), safeGithub=safeUrl(github);
-    if(editId){ Object.assign(data.projects.find(p=>p.id===editId),{title,tag,description,demo:safeDemo,github:safeGithub}); }
-    else { data.projects.push({id:Date.now(),title,tag,description,demo:safeDemo,github:safeGithub}); }
+    const m=readMediaFields();
+    if(editId){ Object.assign(data.projects.find(p=>p.id===editId),{title,tag,description,demo:safeDemo,github:safeGithub,...m}); }
+    else { data.projects.push({id:Date.now(),title,tag,description,demo:safeDemo,github:safeGithub,...m}); }
     save('projects',data.projects); renderProjects(); toast(editId?'Project updated!':'Project added!');
   });
 }
@@ -923,11 +940,54 @@ document.addEventListener('click',e=>{ const nl=document.getElementById('navLink
 // ── UTILS ──
 function escHtml(str){ if(!str)return''; return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function safeUrl(u){ if(!u)return''; try{ const p=new URL(String(u),location.href); return['http:','https:','mailto:'].includes(p.protocol)?String(u):''; }catch{ return''; } }
+function safeMedia(u){ if(!u)return''; const s=String(u).trim(); if(/^(javascript|data|vbscript|blob|file):/i.test(s))return''; return s; }
+const PREFERS_REDUCED=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function normalizeMedia(item){
+  if(!item||!item.media) return [];
+  const m=item.media;
+  const arr=Array.isArray(m)?m:[(typeof m==='string'?{src:m,caption:item.mediaLabel||'',poster:item.poster||''}:m)];
+  return arr.map(x=>typeof x==='string'?{src:x,caption:'',poster:''}:{src:x.src||'',caption:x.caption||'',poster:x.poster||''}).filter(x=>safeMedia(x.src));
+}
+function mediaItemHtml(m){
+  const safe=safeMedia(m.src); if(!safe) return '';
+  const ext=safe.split('?')[0].split('#')[0].split('.').pop().toLowerCase();
+  const isVideo=['mp4','webm','mov','m4v','ogv','ogg'].includes(ext);
+  let inner;
+  if(isVideo){
+    const ps=safeMedia(m.poster);
+    const play=PREFERS_REDUCED?'controls':'autoplay loop';
+    inner=`<video ${play} muted playsinline preload="metadata"${ps?` poster="${escHtml(ps)}"`:''} src="${escHtml(safe)}" onerror="mediaErr(this)"></video>`;
+  } else {
+    inner=`<img src="${escHtml(safe)}" alt="${escHtml(m.caption||'')}" loading="lazy" onerror="mediaErr(this)">`;
+  }
+  const cap=m.caption?`<div class="media-caption">${escHtml(m.caption)}</div>`:'';
+  return `<div class="media-item"><div class="media-frame">${inner}</div>${cap}</div>`;
+}
+function cardMediaHtml(item){
+  const items=normalizeMedia(item);
+  if(!items.length) return '';
+  return `<div class="card-media${items.length>1?' multi':''}">${items.map(mediaItemHtml).join('')}</div>`;
+}
+function mediaErr(el){
+  const it=el.closest('.media-item'); if(it) it.style.display='none';
+  const cm=el.closest('.card-media');
+  if(cm && !Array.from(cm.querySelectorAll('.media-item')).some(n=>n.style.display!=='none')) cm.style.display='none';
+}
+function mediaToText(item){
+  return normalizeMedia(item).map(m=>m.poster?`${m.src} | ${m.caption} | ${m.poster}`:(m.caption?`${m.src} | ${m.caption}`:m.src)).join('\n');
+}
+function mediaFields(ex){ return `
+    <div class="modal-field"><label>Demo Media — one per line: path or URL | caption | poster (last two optional)</label><textarea id="mf_media" rows="4" placeholder="assets/showcase/oracle/oracle-hero.png | Voice-first intake&#10;assets/demos/oracle.mp4 | Live walkthrough | assets/demos/oracle.jpg">${ex?escHtml(mediaToText(ex)):''}</textarea></div>`; }
+function readMediaFields(){
+  const lines=document.getElementById('mf_media').value.split('\n').map(l=>l.trim()).filter(Boolean);
+  const media=lines.map(l=>{ const p=l.split('|').map(s=>s.trim()); return {src:safeMedia(p[0]),caption:p[1]||'',poster:safeMedia(p[2]||'')}; }).filter(x=>x.src);
+  return { media };
+}
 
 // ── INIT ──
 function renderAll(){ renderHero(); renderSkills(); renderAchievements(); renderProjects(); }
 document.getElementById('footerYear').textContent=new Date().getFullYear();
-if(checkStoredSession()){ enterAdminMode(); } else { renderAll(); setTimeout(()=>document.getElementById('authPassword').focus(),200); }
+if(checkStoredSession()){ enterAdminMode(); } else { enterGuestMode(); }
 initReveal();
 </script>
 <script type="module">
