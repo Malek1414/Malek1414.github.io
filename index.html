@@ -129,6 +129,10 @@
   .achievement-card { position: relative; margin-bottom: 1.25rem; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; transition: transform 0.2s, border-color 0.2s; }
   .achievement-card:hover { transform: translateX(4px); border-color: rgba(255,255,255,0.14); }
   .achievement-card::before { content: ''; position: absolute; left: -1.75rem; top: 1.8rem; width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.35); border: 1px solid rgba(255,255,255,0.15); }
+  .achievement-card.media-side { display: grid; grid-template-columns: minmax(220px, 300px) minmax(0, 1fr); gap: 1.4rem; align-items: start; }
+  .achievement-card.media-side.media-side-xl { grid-template-columns: minmax(420px, 600px) minmax(0, 1fr); }
+  .achievement-card.media-side .card-media { margin-bottom: 0; }
+  .achievement-card.media-side .ach-content { min-width: 0; }
   .ach-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
   .ach-title { font-size: 0.98rem; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
   .ach-date { font-size: 0.68rem; color: var(--text2); font-weight: 600; white-space: nowrap; margin-top: 3px; letter-spacing: 0.08em; text-transform: uppercase; }
@@ -156,8 +160,21 @@
   .media-item { position: relative; flex: 0 0 100%; scroll-snap-align: start; }
   .card-media.multi .media-item { flex: 0 0 88%; }
   .media-frame { position: relative; width: 100%; aspect-ratio: 16 / 10; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--bg3); }
+  .media-frame.portrait { aspect-ratio: 9 / 16; max-width: 24rem; margin: 0 auto; }
   .media-frame video, .media-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .media-frame.contain video, .media-frame.contain img { object-fit: contain; background: #050505; }
+  .achievement-card .card-media { margin-bottom: 1.3rem; }
+  .achievement-card .media-frame { aspect-ratio: 16 / 9; }
+  .achievement-card .media-frame.portrait { max-width: 26rem; }
+  .achievement-card .card-media.multi .media-item { flex-basis: 100%; }
+  .achievement-card.media-side .media-frame.portrait { max-width: 100%; }
   .media-caption { position: absolute; left: 0.5rem; bottom: 0.5rem; z-index: 2; font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; font-weight: 600; background: rgba(0,0,0,0.6); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); padding: 0.22rem 0.5rem; border-radius: 3px; }
+
+  @media (max-width: 820px) {
+    .achievement-card.media-side,
+    .achievement-card.media-side.media-side-xl { grid-template-columns: 1fr; }
+    .achievement-card.media-side .card-media { margin-bottom: 1.1rem; }
+  }
 
   #contact { padding: 6rem 0 5rem; border-top: 1px solid var(--border); }
   .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
@@ -616,41 +633,56 @@ const DEFAULTS = {
   tagline: '',
   intro: "I build full-stack AI-powered products — from intelligent financial tools to automated claims processing. Focused on TypeScript, React, and production-ready systems.",
   skills: [
-    { id:1,  name:'TypeScript',       category:'Frontend', color:'#3178c6' },
-    { id:2,  name:'React 19',         category:'Frontend', color:'#61dafb' },
-    { id:3,  name:'Next.js 16',       category:'Frontend', color:'#ffffff' },
-    { id:4,  name:'Tailwind CSS',     category:'Frontend', color:'#38bdf8' },
-    { id:5,  name:'Framer Motion',    category:'Frontend', color:'#a259ff' },
-    { id:6,  name:'D3.js',            category:'Frontend', color:'#f9a03c' },
-    { id:7,  name:'Recharts',         category:'Frontend', color:'#22c55e' },
-    { id:8,  name:'TanStack Query',   category:'Frontend', color:'#ff4154' },
-    { id:9,  name:'Zustand',          category:'Frontend', color:'#ffffff' },
-    { id:10, name:'Vite',             category:'Frontend', color:'#646cff' },
-    { id:11, name:'Node.js',          category:'Backend',  color:'#339933' },
-    { id:12, name:'Express',          category:'Backend',  color:'#68d391' },
-    { id:13, name:'REST APIs',        category:'Backend',  color:'#ffffff' },
-    { id:14, name:'PDF Processing',   category:'Backend',  color:'#a0a0a0' },
-    { id:15, name:'Anthropic SDK',    category:'AI',       color:'#cc785c' },
-    { id:16, name:'PostgreSQL',       category:'Database', color:'#336791' },
-    { id:17, name:'Supabase',         category:'Database', color:'#3ecf8e' },
-    { id:18, name:'Git',              category:'DevOps',   color:'#f05032' }
+    { id:1,  name:'TypeScript',                   category:'Frontend', color:'#3178c6' },
+    { id:2,  name:'React 19',                     category:'Frontend', color:'#61dafb' },
+    { id:3,  name:'Next.js 16',                   category:'Frontend', color:'#ffffff' },
+    { id:4,  name:'Vue 3',                        category:'Frontend', color:'#42b883' },
+    { id:5,  name:'Tailwind CSS',                 category:'Frontend', color:'#38bdf8' },
+    { id:6,  name:'Framer Motion',                category:'Frontend', color:'#a259ff' },
+    { id:7,  name:'D3.js',                        category:'Frontend', color:'#f9a03c' },
+    { id:8,  name:'Recharts',                     category:'Frontend', color:'#22c55e' },
+    { id:9,  name:'TanStack Query',               category:'Frontend', color:'#ff4154' },
+    { id:10, name:'Zustand',                      category:'Frontend', color:'#ffffff' },
+    { id:11, name:'Vite',                         category:'Frontend', color:'#646cff' },
+    { id:12, name:'Node.js',                      category:'Backend',  color:'#339933' },
+    { id:13, name:'Express',                      category:'Backend',  color:'#68d391' },
+    { id:14, name:'Java / Spring Boot',           category:'Backend',  color:'#6db33f' },
+    { id:15, name:'Python',                       category:'Backend',  color:'#3776ab' },
+    { id:16, name:'REST APIs',                    category:'Backend',  color:'#ffffff' },
+    { id:17, name:'Web Crawling',                 category:'Backend',  color:'#a0a0a0' },
+    { id:18, name:'PDF Processing',               category:'Backend',  color:'#a0a0a0' },
+    { id:19, name:'Anthropic Claude API',         category:'AI',       color:'#cc785c' },
+    { id:20, name:'Model Context Protocol (MCP)', category:'AI',       color:'#cc785c' },
+    { id:21, name:'RAG',                          category:'AI',       color:'#d4a27f' },
+    { id:29, name:'LangChain / LlamaIndex',       category:'AI',       color:'#1c8c6f' },
+    { id:30, name:'ChromaDB',                     category:'AI',       color:'#7c5cff' },
+    { id:22, name:'Prompt Engineering',           category:'AI',       color:'#d4a27f' },
+    { id:23, name:'Swift',                        category:'Mobile',   color:'#fa7343' },
+    { id:24, name:'SwiftUI',                      category:'Mobile',   color:'#fa7343' },
+    { id:25, name:'SwiftData',                    category:'Mobile',   color:'#0a84ff' },
+    { id:26, name:'PostgreSQL',                   category:'Database', color:'#336791' },
+    { id:27, name:'Supabase',                     category:'Database', color:'#3ecf8e' },
+    { id:28, name:'Git',                          category:'DevOps',   color:'#f05032' }
   ],
   achievements: [
-    { id:1, title:'Built ORACLE — AI Claims Adjuster', date:'2026', description:'Built a production AI system that fully automates insurance claims adjudication. Stack: Next.js 16, React 19, TypeScript, Supabase, Tailwind v4, Framer Motion, Recharts, Zustand, and the Anthropic Claude API. Handles end-to-end PDF ingestion and autonomous claim decisions.', media:'assets/demos/oracle.mp4', poster:'assets/demos/oracle.jpg', mediaLabel:'Autonomous claim adjudication' },
-    { id:2, title:'Built finance-wizz — AI Financial Advisor', date:'2025', description:'Shipped a full-stack AI financial advisor. Backend: Express + TypeScript + PostgreSQL + Anthropic SDK with PDF parsing via Multer. Frontend: React 19 + Vite + TanStack Query + D3 + Recharts + Framer Motion.', media:'assets/demos/finance-wizz.mp4', poster:'assets/demos/finance-wizz.jpg', mediaLabel:'Document-grounded analysis' },
-    { id:3, title:'RWTH Aachen — Ongoing Studies', date:'2024', description:'Studying at RWTH Aachen University, one of Europe\'s top technical universities, while building production AI products in parallel.' }
+    { id:1, title:'Built ORACLE — Voice-First AI Claims Adjuster', date:'2026', description:'Shipped a production AI system that adjudicates insurance claims end to end. A claimant describes the accident out loud; ORACLE structures the intake, parses the claim PDFs, files the FNOL, and hands the adjuster a decision-ready packet — average claim handled in 2:44. Stack: Next.js 16, React 19, TypeScript, Supabase, Tailwind, Framer Motion, Recharts, Zustand, pdf-lib / pdf.js, and the Anthropic Claude API.', media:[ {src:'assets/showcase/oracle/oracle-hero.png', caption:'Voice-first claims intake'}, {src:'assets/showcase/oracle/oracle-file-claim.png', caption:'Describe the accident'}, {src:'assets/showcase/oracle/oracle-dashboard.png', caption:'Live claim dashboard'} ] },
+    { id:2, title:'Anthropic Certificate — Intro to Advanced MCP Topics', date:'2026', description:'Earned a Claude / Anthropic certificate covering the Model Context Protocol from first principles through advanced topics — building MCP servers and clients, exposing tools and resources, and wiring external systems into Claude. Applied directly across my agentic and AI-tooling work.' },
+    { id:3, title:'Built finance-wizz — AI Financial Advisor', date:'2025', description:'Shipped a full-stack AI financial advisor: upload bank statements or financial PDFs and get Claude-powered, document-grounded analysis traced back to the source figures. Backend: Express + TypeScript + PostgreSQL + Anthropic SDK with PDF parsing via Multer. Frontend: React 19 + Vite + TanStack Query + D3 + Recharts + Framer Motion.', media:'assets/demos/finance-wizz.mp4', poster:'assets/demos/finance-wizz.jpg', mediaLabel:'Document-grounded analysis' },
+    { id:4, title:'Built Second Brain — End-to-End RAG Knowledge System', date:'2025', description:'Built a single end-to-end RAG system where note-taking, storage, and retrieval are one loop rather than three separate features. You capture a note, idea, or document by voice or text; it is embedded and indexed into a vector store and filed as structured Markdown into an Obsidian vault; then you query the entire corpus through the Animus chatbot, which retrieves the relevant passages from your own notes and answers with citations back to the source. It runs on retrieval-augmented generation — the same pattern behind most production AI products today — applied to a personal knowledge base. Stack: Node.js, Express, a LangChain / LlamaIndex retrieval layer over a ChromaDB vector store, the Anthropic Claude API, Obsidian vault sync, and a vanilla JS + Canvas (Animus) UI.', media:[ {src:'assets/demos/testimonials/second-brain-combined.mp4', caption:'Animus — capture to vault, then query', poster:'assets/demos/testimonials/second-brain-combined.png'} ] },
+    { id:5, title:'Built HUSTLR — Daily Momentum App', date:'2025', description:'Built a native iOS self-optimization app that rolls four weighted pillars — Appeal, Status, Money, and Vitality — into a single daily Ascension score, writes a brutal-honesty status line, and turns a one-line goal into a validated, recovery-adaptive plan. Phone-first and built for fast daily check-ins, so progress stays visible without becoming a bloated dashboard. Stack: Swift, SwiftUI, and SwiftData (CloudKit-ready).', media:[ {src:'assets/demos/testimonials/hustlr-testimonial.mp4', caption:'Daily momentum walkthrough', poster:'assets/demos/testimonials/hustlr-testimonial.png', aspect:'portrait', fit:'contain'} ], layout:'side', layoutSize:'xl' },
+    { id:6, title:'RWTH Aachen — Ongoing Studies', date:'2024', description:'Studying at RWTH Aachen University, one of Europe\'s top technical universities, while building and shipping production AI products in parallel.' }
   ],
   projects: [
-    { id:1, title:'ORACLE', tag:'AI / Insurance', description:'A voice-first AI insurance claim agent. The claimant describes the accident out loud — Oracle runs the intake, extracts the details, files the FNOL, and hands a ready packet to the adjuster. Average claim: 2:44. Built with Next.js, React 19, TypeScript, Supabase, and the Anthropic Claude API.', demo:'', github:'https://github.com/Malek1414/ORACLE', media:[ {src:'assets/showcase/oracle/oracle-hero.png', caption:'Two minutes, voice-first'}, {src:'assets/showcase/oracle/oracle-file-claim.png', caption:'Describe the accident'}, {src:'assets/showcase/oracle/oracle-dashboard.png', caption:'Live claim dashboard'}, {src:'assets/demos/oracle.mp4', caption:'Live walkthrough', poster:'assets/showcase/oracle/oracle-hero.png'} ] },
-    { id:2, title:'finance-wizz', tag:'AI / Fintech', description:'Full-stack AI financial advisor. Upload financial documents and get Claude-powered, document-grounded analysis. Backend: Express + TypeScript + PostgreSQL + Anthropic SDK. Frontend: React 19 + Vite + TanStack Query + D3 + Recharts + Framer Motion.', demo:'', github:'https://github.com/Malek1414/finance-wizz', media:[ {src:'assets/demos/finance-wizz.mp4', caption:'Document-grounded analysis', poster:'assets/demos/finance-wizz.jpg'} ] },
-    { id:3, title:'Loon Link', tag:'Web / Scraping', description:'A website scraper that turns messy pages into clean, structured data — point it at a site and pull exactly the fields you need.', demo:'', github:'', media:[ {src:'assets/demos/loon-link.mp4', caption:'Scrape walkthrough'} ] },
-    { id:4, title:'Second Brain', tag:'AI / Productivity', description:'An AI second brain that captures notes and ideas and syncs them straight into an Obsidian vault — your knowledge, organised and searchable across the graph.', demo:'', github:'', media:[ {src:'assets/demos/second-brain.mp4', caption:'Capture → Obsidian vault'} ] },
-    { id:5, title:'HUSTLR', tag:'iOS / Productivity', description:'A native iOS app for building daily momentum and tracking output, built with Swift.', demo:'', github:'', media:[ {src:'assets/demos/hustlr.mp4', caption:'Daily momentum tracking'} ] },
-    { id:6, title:'Solana Arbitrage Bot', tag:'Web3 / Trading', description:'A Solana arbitrage bot that scans DEXes for price gaps and executes trades — grounded in original research on on-chain market microstructure.', demo:'', github:'', media:[ {src:'assets/demos/solana-arb.mp4', caption:'Live arbitrage scan'} ] },
-    { id:7, title:'Personal Portfolio', tag:'Web', description:'This site — luminous B&W live background, a rotating 3D signature coin, admin edit mode, a GitHub repo importer, and inline project demos. Built with vanilla HTML, CSS, and JS.', demo:'https://malek1414.github.io', github:'https://github.com/Malek1414/Malek1414.github.io' }
+    { id:1, title:'ORACLE', tag:'AI / Insurance', description:'A voice-first AI insurance claim agent. The claimant describes the accident out loud — ORACLE runs the intake, extracts the details, parses the claim PDFs, files the FNOL, and hands a decision-ready packet to the adjuster. Average claim: 2:44. Stack: Next.js 16, React 19, TypeScript, Supabase, Tailwind, Framer Motion, Recharts, Zustand, pdf-lib / pdf.js, and the Anthropic Claude API.', demo:'', github:'https://github.com/Malek1414/ORACLE', media:[ {src:'assets/showcase/oracle/oracle-hero.png', caption:'Two minutes, voice-first'}, {src:'assets/showcase/oracle/oracle-file-claim.png', caption:'Describe the accident'}, {src:'assets/showcase/oracle/oracle-dashboard.png', caption:'Live claim dashboard'}, {src:'assets/demos/oracle.mp4', caption:'Live walkthrough', poster:'assets/showcase/oracle/oracle-hero.png'} ] },
+    { id:2, title:'finance-wizz', tag:'AI / Fintech', description:'A full-stack AI financial advisor. Upload bank statements or financial PDFs and get Claude-powered, document-grounded analysis — spending breakdowns, trends, and plain-language answers traced back to the source figures. Stack: React 19, Vite, TanStack Query, D3, Recharts, and Framer Motion on the front; Express, TypeScript, PostgreSQL, Multer, and the Anthropic SDK on the back.', demo:'', github:'https://github.com/Malek1414/finance-wizz', media:[ {src:'assets/demos/testimonials/finance-wizz-testimonial.mp4', caption:'Client demo reel', poster:'assets/demos/testimonials/finance-wizz-testimonial.png'} ] },
+    { id:3, title:'Loon Link', tag:'Web / Intelligence', description:'A company-intelligence crawler. Point it at any URL, choose a crawl depth, and Loon Link spiders the site and returns a clean profile — contact emails, phone numbers, social links, the detected front-end tech stack, and a typed map of every page it found. Crawled companies are saved to revisit anytime. Stack: Java, Spring Boot, and a Vue 3 dashboard over a REST API.', demo:'', github:'', media:[ {src:'assets/demos/testimonials/loon-link-testimonial.mp4', caption:'Apple scrape walkthrough', poster:'assets/demos/testimonials/loon-link-testimonial.png'} ] },
+    { id:4, title:'Second Brain', tag:'AI / RAG', description:'A single end-to-end RAG system where note-taking, storage, and retrieval are one loop, not three separate features. Capture a note, idea, or document by voice or text; it is embedded and indexed into a vector store and filed as structured Markdown into an Obsidian vault; then query the whole corpus through the Animus chatbot, which retrieves the relevant passages from your own notes and answers with citations back to the source. It runs on retrieval-augmented generation — the same pattern behind most production AI products today — applied to a personal knowledge base. Stack: Node.js, Express, a LangChain / LlamaIndex retrieval layer over a ChromaDB vector store, the Anthropic Claude API, Obsidian vault sync, and a vanilla JS + Canvas (Animus) UI.', demo:'', github:'', media:[ {src:'assets/demos/testimonials/second-brain-combined.mp4', caption:'Animus — capture to vault, then query', poster:'assets/demos/testimonials/second-brain-combined.png'} ] },
+    { id:5, title:'HUSTLR', tag:'iOS / Productivity', description:'A native iOS self-optimization app. HUSTLR rolls four weighted pillars — Appeal, Status, Money, and Vitality — into one daily Ascension score, writes a brutal-honesty status line, and turns a one-line goal into a validated, recovery-adaptive plan. Stack: Swift, SwiftUI, and SwiftData (CloudKit-ready).', demo:'', github:'', media:[ {src:'assets/demos/testimonials/hustlr-testimonial.mp4', caption:'Daily momentum walkthrough', poster:'assets/demos/testimonials/hustlr-testimonial.png', aspect:'portrait', fit:'contain'} ] },
+    { id:6, title:'Solana Arbitrage Bot', tag:'Web3 / Trading', description:'A Solana arbitrage bot that continuously scans decentralized exchanges for price gaps and executes trades when the spread clears fees — grounded in original research into on-chain market microstructure and DEX liquidity. Stack: TypeScript, built on the Solana web3 stack with DEX aggregator APIs.', demo:'', github:'', media:[ {src:'assets/demos/solana-arb.mp4', caption:'Live arbitrage scan'} ] },
+    { id:7, title:'Personal Portfolio', tag:'Web', description:'This site — a single hand-built file with a luminous black-and-white WebGL background, a rotating 3D signature coin, an admin edit mode with a GitHub repo importer, and inline project demos. No framework, no build step. Stack: vanilla HTML, CSS, JavaScript, and Three.js / WebGL.', demo:'https://malek1414.github.io', github:'https://github.com/Malek1414/Malek1414.github.io' }
   ]
 };
-const DATA_VERSION = '5';
+const DATA_VERSION = '10';
 if (localStorage.getItem('mh_data_version') !== DATA_VERSION) {
   ['tagline','intro','skills','achievements','projects'].forEach(k => localStorage.removeItem('mh_'+k));
   localStorage.setItem('mh_data_version', DATA_VERSION);
@@ -746,11 +778,13 @@ function selectColor(el,color){
 function renderAchievements(){
   const tl=document.getElementById('achievementsTimeline');
   tl.innerHTML=data.achievements.length?data.achievements.map(a=>`
-    <div class="achievement-card">
+    <div class="achievement-card${a.layout==='side'?' media-side':''}${a.layoutSize==='xl'?' media-side-xl':''}">
       ${cardMediaHtml(a)}
-      <div class="ach-header"><div class="ach-title">${escHtml(a.title)}</div><div class="ach-date">${escHtml(a.date)}</div></div>
-      <div class="ach-desc">${escHtml(a.description)}</div>
-      ${isAdmin?`<div class="ach-actions"><button class="ach-btn" onclick="openAchievementModal(${a.id})">✎ Edit</button><button class="ach-btn danger" onclick="deleteAchievement(${a.id})">✕ Delete</button></div>`:''}
+      <div class="ach-content">
+        <div class="ach-header"><div class="ach-title">${escHtml(a.title)}</div><div class="ach-date">${escHtml(a.date)}</div></div>
+        <div class="ach-desc">${escHtml(a.description)}</div>
+        ${isAdmin?`<div class="ach-actions"><button class="ach-btn" onclick="openAchievementModal(${a.id})">✎ Edit</button><button class="ach-btn danger" onclick="deleteAchievement(${a.id})">✕ Delete</button></div>`:''}
+      </div>
     </div>`).join(''):'<p style="color:var(--text2);padding-left:1rem">No achievements yet.</p>';
   document.getElementById('achAddRow').innerHTML=isAdmin?`<button class="add-btn" onclick="openAchievementModal()">+ Add Achievement</button>`:'';
 }
@@ -946,12 +980,18 @@ function normalizeMedia(item){
   if(!item||!item.media) return [];
   const m=item.media;
   const arr=Array.isArray(m)?m:[(typeof m==='string'?{src:m,caption:item.mediaLabel||'',poster:item.poster||''}:m)];
-  return arr.map(x=>typeof x==='string'?{src:x,caption:'',poster:''}:{src:x.src||'',caption:x.caption||'',poster:x.poster||''}).filter(x=>safeMedia(x.src));
+  return arr.map(x=>typeof x==='string'
+    ? {src:x,caption:'',poster:'',aspect:'',fit:''}
+    : {src:x.src||'',caption:x.caption||'',poster:x.poster||'',aspect:x.aspect||'',fit:x.fit||''}
+  ).filter(x=>safeMedia(x.src));
 }
 function mediaItemHtml(m){
   const safe=safeMedia(m.src); if(!safe) return '';
   const ext=safe.split('?')[0].split('#')[0].split('.').pop().toLowerCase();
   const isVideo=['mp4','webm','mov','m4v','ogv','ogg'].includes(ext);
+  const frameClasses=['media-frame'];
+  if(m.aspect==='portrait') frameClasses.push('portrait');
+  if(m.fit==='contain') frameClasses.push('contain');
   let inner;
   if(isVideo){
     const ps=safeMedia(m.poster);
@@ -961,7 +1001,7 @@ function mediaItemHtml(m){
     inner=`<img src="${escHtml(safe)}" alt="${escHtml(m.caption||'')}" loading="lazy" onerror="mediaErr(this)">`;
   }
   const cap=m.caption?`<div class="media-caption">${escHtml(m.caption)}</div>`:'';
-  return `<div class="media-item"><div class="media-frame">${inner}</div>${cap}</div>`;
+  return `<div class="media-item"><div class="${frameClasses.join(' ')}">${inner}</div>${cap}</div>`;
 }
 function cardMediaHtml(item){
   const items=normalizeMedia(item);
@@ -974,13 +1014,20 @@ function mediaErr(el){
   if(cm && !Array.from(cm.querySelectorAll('.media-item')).some(n=>n.style.display!=='none')) cm.style.display='none';
 }
 function mediaToText(item){
-  return normalizeMedia(item).map(m=>m.poster?`${m.src} | ${m.caption} | ${m.poster}`:(m.caption?`${m.src} | ${m.caption}`:m.src)).join('\n');
+  return normalizeMedia(item).map(m=>{
+    const parts=[m.src];
+    if(m.caption||m.poster||m.aspect||m.fit) parts.push(m.caption||'');
+    if(m.poster||m.aspect||m.fit) parts.push(m.poster||'');
+    if(m.aspect||m.fit) parts.push(m.aspect||'');
+    if(m.fit) parts.push(m.fit);
+    return parts.join(' | ');
+  }).join('\n');
 }
 function mediaFields(ex){ return `
-    <div class="modal-field"><label>Demo Media — one per line: path or URL | caption | poster (last two optional)</label><textarea id="mf_media" rows="4" placeholder="assets/showcase/oracle/oracle-hero.png | Voice-first intake&#10;assets/demos/oracle.mp4 | Live walkthrough | assets/demos/oracle.jpg">${ex?escHtml(mediaToText(ex)):''}</textarea></div>`; }
+    <div class="modal-field"><label>Demo Media — one per line: path or URL | caption | poster | aspect | fit (last fields optional)</label><textarea id="mf_media" rows="4" placeholder="assets/showcase/oracle/oracle-hero.png | Voice-first intake&#10;assets/demos/oracle.mp4 | Live walkthrough | assets/demos/oracle.jpg&#10;assets/demos/testimonials/hustlr-testimonial.mp4 | Daily momentum walkthrough | assets/demos/testimonials/hustlr-testimonial.png | portrait | contain">${ex?escHtml(mediaToText(ex)):''}</textarea></div>`; }
 function readMediaFields(){
   const lines=document.getElementById('mf_media').value.split('\n').map(l=>l.trim()).filter(Boolean);
-  const media=lines.map(l=>{ const p=l.split('|').map(s=>s.trim()); return {src:safeMedia(p[0]),caption:p[1]||'',poster:safeMedia(p[2]||'')}; }).filter(x=>x.src);
+  const media=lines.map(l=>{ const p=l.split('|').map(s=>s.trim()); return {src:safeMedia(p[0]),caption:p[1]||'',poster:safeMedia(p[2]||''),aspect:p[3]||'',fit:p[4]||''}; }).filter(x=>x.src);
   return { media };
 }
 
