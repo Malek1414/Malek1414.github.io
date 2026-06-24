@@ -248,7 +248,8 @@
 
   @media (max-width: 768px) {
     .nav-links { display: none; }
-    .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: rgba(0,0,0,0.96); padding: 1rem 2rem 1.5rem; border-bottom: 1px solid var(--border); }
+    .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: #080808; padding: 1rem 2rem 1.5rem; border-bottom: 1px solid var(--border); box-shadow: 0 16px 40px rgba(0,0,0,0.6); }
+    .nav-links.open a { padding: 0.55rem 0; font-size: 0.92rem; }
     .hamburger { display: block; }
     .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
     .projects-grid { grid-template-columns: 1fr; }
@@ -280,14 +281,17 @@
     <div class="auth-title">Malek Hussein</div>
     <div class="auth-sub">Portfolio &amp; Personal Space</div>
     <hr class="auth-divider">
+    <form class="auth-form" onsubmit="event.preventDefault();attemptLogin();">
+    <input type="text" name="username" value="admin" autocomplete="username" hidden aria-hidden="true">
     <div class="auth-field">
-      <label>Admin Password</label>
-      <input type="password" id="authPassword" placeholder="Enter password to edit" onkeydown="if(event.key==='Enter')attemptLogin()">
+      <label for="authPassword">Admin Password</label>
+      <input type="password" id="authPassword" autocomplete="current-password" placeholder="Enter password to edit">
     </div>
     <div class="auth-error" id="authError"></div>
     <label class="auth-remember"><input type="checkbox" id="rememberMe"> Remember me for 24 hours</label>
-    <button class="btn-primary" onclick="attemptLogin()">Admin Login</button>
-    <button class="btn-ghost" onclick="enterGuestMode()">View as Guest</button>
+    <button type="submit" class="btn-primary">Admin Login</button>
+    <button type="button" class="btn-ghost" onclick="enterGuestMode()">View as Guest</button>
+    </form>
   </div>
 </div>
 
@@ -438,10 +442,10 @@
       </div>
       <form class="contact-form" id="contactForm" onsubmit="submitContactForm(event)">
         <input type="hidden" name="access_key" id="w3f_key">
-        <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
-        <div class="form-group"><label>Your Name</label><input type="text" name="name" placeholder="Jane Smith" required autocomplete="name"></div>
-        <div class="form-group"><label>Your Email</label><input type="email" name="email" placeholder="jane@example.com" required autocomplete="email"></div>
-        <div class="form-group"><label>Message</label><textarea name="message" placeholder="What's on your mind?" required></textarea></div>
+        <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="form-group"><label for="cf_name">Your Name</label><input type="text" id="cf_name" name="name" placeholder="Jane Smith" required autocomplete="name"></div>
+        <div class="form-group"><label for="cf_email">Your Email</label><input type="email" id="cf_email" name="email" placeholder="jane@example.com" required autocomplete="email"></div>
+        <div class="form-group"><label for="cf_message">Message</label><textarea id="cf_message" name="message" placeholder="What's on your mind?" required></textarea></div>
         <div id="formMsg" style="display:none"></div>
         <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
       </form>
@@ -673,16 +677,16 @@ const DEFAULTS = {
     { id:6, title:'RWTH Aachen — Ongoing Studies', date:'2024', description:'Studying at RWTH Aachen University, one of Europe\'s top technical universities, while building and shipping production AI products in parallel.' }
   ],
   projects: [
-    { id:1, title:'ORACLE', tag:'AI / Insurance', description:'A voice-first AI insurance claim agent. The claimant describes the accident out loud — ORACLE runs the intake, extracts the details, parses the claim PDFs, files the FNOL, and hands a decision-ready packet to the adjuster. Average claim: 2:44. Stack: Next.js 16, React 19, TypeScript, Supabase, Tailwind, Framer Motion, Recharts, Zustand, pdf-lib / pdf.js, and the Anthropic Claude API.', demo:'', github:'https://github.com/Malek1414/ORACLE', media:[ {src:'assets/showcase/oracle/oracle-hero.png', caption:'Two minutes, voice-first'}, {src:'assets/showcase/oracle/oracle-file-claim.png', caption:'Describe the accident'}, {src:'assets/showcase/oracle/oracle-dashboard.png', caption:'Live claim dashboard'}, {src:'assets/demos/oracle.mp4', caption:'Live walkthrough', poster:'assets/showcase/oracle/oracle-hero.png'} ] },
+    { id:1, title:'ORACLE', tag:'AI / Insurance', description:'A voice-first AI insurance claim agent. The claimant describes the accident out loud — ORACLE runs the intake, extracts the details, parses the claim PDFs, files the FNOL, and hands a decision-ready packet to the adjuster. Average claim: 2:44. Stack: Next.js 16, React 19, TypeScript, Supabase, Tailwind, Framer Motion, Recharts, Zustand, pdf-lib / pdf.js, and the Anthropic Claude API.', demo:'', github:'https://github.com/Malek1414/ORACLE', media:[ {src:'assets/showcase/oracle/oracle-hero.png', caption:'Two minutes, voice-first'}, {src:'assets/showcase/oracle/oracle-file-claim.png', caption:'Describe the accident'}, {src:'assets/showcase/oracle/oracle-dashboard.png', caption:'Live claim dashboard'} ] },
     { id:2, title:'finance-wizz', tag:'AI / Fintech', description:'A full-stack AI financial advisor. Upload bank statements or financial PDFs and get Claude-powered, document-grounded analysis — spending breakdowns, trends, and plain-language answers traced back to the source figures. Stack: React 19, Vite, TanStack Query, D3, Recharts, and Framer Motion on the front; Express, TypeScript, PostgreSQL, Multer, and the Anthropic SDK on the back.', demo:'', github:'https://github.com/Malek1414/finance-wizz', media:[ {src:'assets/demos/testimonials/finance-wizz-testimonial.mp4', caption:'Client demo reel', poster:'assets/demos/testimonials/finance-wizz-testimonial.png'} ] },
     { id:3, title:'Loon Link', tag:'Web / Intelligence', description:'A company-intelligence crawler. Point it at any URL, choose a crawl depth, and Loon Link spiders the site and returns a clean profile — contact emails, phone numbers, social links, the detected front-end tech stack, and a typed map of every page it found. Crawled companies are saved to revisit anytime. Stack: Java, Spring Boot, and a Vue 3 dashboard over a REST API.', demo:'', github:'', media:[ {src:'assets/demos/testimonials/loon-link-testimonial.mp4', caption:'Apple scrape walkthrough', poster:'assets/demos/testimonials/loon-link-testimonial.png'} ] },
     { id:4, title:'Second Brain', tag:'AI / RAG', description:'A single end-to-end RAG system where note-taking, storage, and retrieval are one loop, not three separate features. Capture a note, idea, or document by voice or text; it is embedded and indexed into a vector store and filed as structured Markdown into an Obsidian vault; then query the whole corpus through the Animus chatbot, which retrieves the relevant passages from your own notes and answers with citations back to the source. It runs on retrieval-augmented generation — the same pattern behind most production AI products today — applied to a personal knowledge base. Stack: Node.js, Express, a LangChain / LlamaIndex retrieval layer over a ChromaDB vector store, the Anthropic Claude API, Obsidian vault sync, and a vanilla JS + Canvas (Animus) UI.', demo:'', github:'', media:[ {src:'assets/demos/testimonials/second-brain-combined.mp4', caption:'Animus — capture to vault, then query', poster:'assets/demos/testimonials/second-brain-combined.png'} ] },
     { id:5, title:'HUSTLR', tag:'iOS / Productivity', description:'A native iOS self-optimization app. HUSTLR rolls four weighted pillars — Appeal, Status, Money, and Vitality — into one daily Ascension score, writes a brutal-honesty status line, and turns a one-line goal into a validated, recovery-adaptive plan. Stack: Swift, SwiftUI, and SwiftData (CloudKit-ready).', demo:'', github:'', media:[ {src:'assets/demos/testimonials/hustlr-testimonial.mp4', caption:'Daily momentum walkthrough', poster:'assets/demos/testimonials/hustlr-testimonial.png', aspect:'portrait', fit:'contain'} ] },
-    { id:6, title:'Solana Arbitrage Bot', tag:'Web3 / Trading', description:'A Solana arbitrage bot that continuously scans decentralized exchanges for price gaps and executes trades when the spread clears fees — grounded in original research into on-chain market microstructure and DEX liquidity. Stack: TypeScript, built on the Solana web3 stack with DEX aggregator APIs.', demo:'', github:'', media:[ {src:'assets/demos/solana-arb.mp4', caption:'Live arbitrage scan'} ] },
+    { id:6, title:'Solana Arbitrage Bot', tag:'Web3 / Trading', description:'A Solana arbitrage bot that continuously scans decentralized exchanges for price gaps and executes trades when the spread clears fees — grounded in original research into on-chain market microstructure and DEX liquidity. Stack: TypeScript, built on the Solana web3 stack with DEX aggregator APIs.', demo:'', github:'', media:[] },
     { id:7, title:'Personal Portfolio', tag:'Web', description:'This site — a single hand-built file with a luminous black-and-white WebGL background, a rotating 3D signature coin, an admin edit mode with a GitHub repo importer, and inline project demos. No framework, no build step. Stack: vanilla HTML, CSS, JavaScript, and Three.js / WebGL.', demo:'https://malek1414.github.io', github:'https://github.com/Malek1414/Malek1414.github.io' }
   ]
 };
-const DATA_VERSION = '10';
+const DATA_VERSION = '11';
 if (localStorage.getItem('mh_data_version') !== DATA_VERSION) {
   ['tagline','intro','skills','achievements','projects'].forEach(k => localStorage.removeItem('mh_'+k));
   localStorage.setItem('mh_data_version', DATA_VERSION);
