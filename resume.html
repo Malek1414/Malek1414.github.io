@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Malek Hassan - Technical Resume</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #e8e8e8; color: #111; font-family: Charter, 'Bitstream Charter', 'Sitka Text', Georgia, serif; font-size: 9.35pt; line-height: 1.35; }
+  .page { width: 210mm; min-height: 297mm; margin: 16px auto; padding: 12.5mm 14mm 11mm; background: #fff; box-shadow: 0 8px 35px rgba(0,0,0,.12); }
+  header { border-bottom: 1.4px solid #111; box-shadow: 0 2px 0 #b9bec8; padding-bottom: 7px; margin-bottom: 10px; }
+  h1 { font-size: 23pt; line-height: 1; letter-spacing: -.035em; }
+  .headline { margin-top: 4px; font-size: 10pt; font-weight: 700; color: #3d4450; }
+  .contact { margin-top: 5px; display: flex; flex-wrap: wrap; gap: 2px 8px; font-size: 8.3pt; color: #5c6472; }
+  a { color: #111; text-decoration: none; }
+  .section-title { margin: 10px 0 5px; padding-bottom: 3px; border-bottom: 1px solid #b9bec8; font-size: 9.2pt; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; }
+  .entry { margin: 0 0 8px; break-inside: avoid; }
+  .entry-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .entry-title { font-size: 9.7pt; font-weight: 800; }
+  .entry-date { flex: none; font-size: 8.45pt; font-weight: 700; color: #3d4450; }
+  .entry-sub { display: flex; justify-content: space-between; gap: 12px; margin-top: 1px; font-size: 8.5pt; font-style: italic; color: #5c6472; }
+  .entry-link { font-size: 8pt; font-style: normal; }
+  ul { margin: 2px 0 0 15px; }
+  li { margin: 0 0 1.5px; padding-left: 1px; }
+  .skills p { margin-bottom: 2px; }
+  .skills strong { font-weight: 800; }
+  .note { color: #6b7280; font-size: 7.8pt; }
+  @media print {
+    body { background: #fff; }
+    .page { margin: 0; box-shadow: none; }
+  }
+  @page { size: A4; margin: 0; }
+</style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <h1>Malek Hassan</h1>
+    <div class="headline">AI Systems Engineer | Open-Source Developer | Computer Science at CODE University of Applied Sciences, Berlin</div>
+    <div class="contact">
+      <span>Berlin, Germany</span><span>|</span>
+      <a href="mailto:malek.hassan@code.berlin">malek.hassan@code.berlin</a><span>|</span>
+      <span>+49 176 32469907</span><span>|</span>
+      <a href="https://linkedin.com/in/malek-hussein">linkedin.com/in/malek-hussein</a><span>|</span>
+      <a href="https://github.com/Malek1414">github.com/Malek1414</a><span>|</span>
+      <a href="https://malek1414.github.io">malek1414.github.io</a>
+    </div>
+  </header>
+
+  <section>
+    <div class="section-title">Education</div>
+    <div class="entry">
+      <div class="entry-head"><div class="entry-title">CODE University of Applied Sciences</div><div class="entry-date">2026 - Present</div></div>
+      <div class="entry-sub"><span>B.Sc. Software Engineering - final year</span><span>Berlin, Germany</span></div>
+      <ul><li>Transferred from RWTH Aachen University to complete the final year of the degree in Berlin, moving to a project-based curriculum built around shipping real software.</li></ul>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><div class="entry-title">RWTH Aachen University</div><div class="entry-date">Oct 2023 - 2026</div></div>
+      <div class="entry-sub"><span>B.Sc. Computer Science - first two years</span><span>Aachen, Germany</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">Experience</div>
+    <div class="entry">
+      <div class="entry-head"><div class="entry-title">African Arab International Bank</div><div class="entry-date">Jul 2025 - Sep 2025</div></div>
+      <div class="entry-sub"><span>Software Engineering Intern, Digital Factory</span><span>Cairo, Egypt</span></div>
+      <ul>
+        <li>Built an end-to-end banking support assistant with HTML, CSS, JavaScript/TypeScript, URL-scraped public knowledge, and locally hosted Ollama inference.</li>
+        <li>Won adoption of the concept by the development team and documented its retrieval, inference, and data flow for the bank's internal review process.</li>
+      </ul>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><div class="entry-title">RWTH Aachen University</div><div class="entry-date">Oct 2023 - Jan 2024</div></div>
+      <div class="entry-sub"><span>Student Technical Support, CS Peer Assistance</span><span>Aachen, Germany</span></div>
+      <ul><li>Supported peers with Java debugging, Git/GitHub workflows, and LaTeX document structure.</li></ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">Selected Projects</div>
+    <div class="entry">
+      <div class="entry-head"><div class="entry-title">MOZCODE - Symbol-Level Context Engine for Coding Agents</div><div class="entry-date">2026</div></div>
+      <div class="entry-sub"><span>Creator and maintainer | MIT licensed</span><a class="entry-link" href="https://github.com/Malek1414/MOZCODE">github.com/Malek1414/MOZCODE</a></div>
+      <ul>
+        <li>Built a local MCP server for Claude Code, Codex, and OpenAI models that uses tree-sitter ASTs to return requested symbols and structural outlines instead of entire source files.</li>
+        <li>Implemented grouped code search, AST-anchored edits with parse validation, graceful fallbacks, and cached read-only SQLite/PostgreSQL schema introspection.</li>
+        <li>Instrumented an append-only JSONL ledger and self-contained SVG dashboard; measured an estimated 1,749,436 input tokens avoided across 938 optimized calls, with 80% average payload reduction versus disclosed whole-file/plain-grep baselines.</li>
+      </ul>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><div class="entry-title">Second Brain - End-to-End RAG Knowledge System</div><div class="entry-date">2025</div></div>
+      <div class="entry-sub"><span>Personal knowledge capture and cited retrieval</span><span>Node.js | ChromaDB | Claude API</span></div>
+      <ul>
+        <li>Built one retrieval loop from voice/text capture through embedding and ChromaDB indexing to structured Markdown synchronization with an Obsidian vault.</li>
+        <li>Implemented an Animus chat interface that retrieves relevant passages from the user's corpus and generates Claude answers with citations back to the source notes.</li>
+        <li>Integrated Node.js, Express, LangChain/LlamaIndex, ChromaDB, the Anthropic Claude API, Obsidian vault sync, and a vanilla JavaScript/Canvas interface.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="skills">
+    <div class="section-title">Technical Skills</div>
+    <p><strong>Languages:</strong> TypeScript, JavaScript, Python, Java, SQL, C, HTML/CSS</p>
+    <p><strong>AI and systems:</strong> RAG, Model Context Protocol, tree-sitter, vector search, prompt engineering, Claude API, Ollama</p>
+    <p><strong>Backend and data:</strong> Node.js, Express, PostgreSQL, SQLite, Supabase, ChromaDB, REST APIs</p>
+    <p><strong>Frontend and visualization:</strong> React, Next.js, Vite, D3.js, Recharts, Tailwind CSS, Canvas, Framer Motion</p>
+    <p><strong>Developer tooling:</strong> Git/GitHub, Vitest, esbuild, PDF processing, command-line workflows</p>
+  </section>
+
+  <section>
+    <div class="section-title">Certifications</div>
+    <p>Anthropic: Introduction to Model Context Protocol; Model Context Protocol - Advanced Topics; Introduction to Agent Skills; Introduction to Subagents (May 2026)</p>
+  </section>
+
+  <section>
+    <div class="section-title">Leadership</div>
+    <div class="entry">
+      <div class="entry-head"><div class="entry-title">Organising Committee Head, Model United Nations</div><div class="entry-date">Sep 2022 - Jun 2023</div></div>
+      <div class="entry-sub"><span>High school leadership role</span><span>Cairo, Egypt</span></div>
+      <ul>
+        <li>Led the organising committee across sales, marketing, logistics, and administration, and delivered a keynote to an audience of 300+.</li>
+        <li>Improved the event's operational performance by 20% year over year.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">Awards and Honors</div>
+    <p><strong>State Champion, Basketball</strong> - won a national/state championship title in the youth division.</p>
+  </section>
+
+  <p class="note" style="margin-top:6px">MOZCODE figures are estimates against local counterfactual baselines, not billing data. Snapshot: 6 Aug 2026.</p>
+</main>
+</body>
+</html>
