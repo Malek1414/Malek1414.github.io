@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+
+# Tooling / local state
+.claude/
+.playwright-cli/
+tmp/
+.li_*
+
+# Personal documents — this repo is published at malek1414.github.io,
+# so anything committed here is publicly reachable.
+IMG_5482.pdf
+cover-letter.html
+
+# Working notes and agent definitions (local only)
+CLAUDE-FABLE-5 copy.md
+CLAUDE_AI_PROJECT_BRIEF.md
+frontend-developer.md
+mobile-developer.md
+ui-designer.md
+assets/*-handoff.md
