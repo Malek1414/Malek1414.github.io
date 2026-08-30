@@ -100,7 +100,7 @@ def make_styles(f):
         ),
         "section": ParagraphStyle(
             "Section", parent=base["Normal"], fontName=f["bold"],
-            fontSize=8.6, leading=10, spaceBefore=7, spaceAfter=2.5,
+            fontSize=8.6, leading=10, spaceBefore=5, spaceAfter=2.5,
             textColor=INK, textTransform="uppercase",
         ),
         "entry": ParagraphStyle(
@@ -172,7 +172,7 @@ def entry(styles, title, date, subtitle, side, bullets, side_style="sub", side_w
     if subtitle or side:
         block.append(split_row(subtitle, side, styles["sub"], styles[side_style], side_width))
     block.extend(bullet(styles, item) for item in bullets)
-    block.append(Spacer(1, 3.5))
+    block.append(Spacer(1, 2.2))
     return KeepTogether(block)
 
 
@@ -185,7 +185,7 @@ def build(family=DEFAULT_FAMILY, output=None, mirror=_DEFAULT):
     doc = SimpleDocTemplate(
         str(output), pagesize=A4,
         leftMargin=13 * mm, rightMargin=13 * mm,
-        topMargin=10 * mm, bottomMargin=9 * mm,
+        topMargin=9 * mm, bottomMargin=7.5 * mm,
         title="Malek Hassan - Technical Resume",
         author="Malek Hassan",
         subject="AI systems engineering and open-source development resume",
@@ -217,7 +217,7 @@ def build(family=DEFAULT_FAMILY, output=None, mirror=_DEFAULT):
     story.append(entry(
         styles, "CODE University of Applied Sciences", "2026 - Present",
         "B.Sc. Software Engineering - final year", "Berlin, Germany",
-        ["Transferred from RWTH Aachen University to complete the final year of the degree in Berlin, moving to a project-based curriculum built around shipping real software."],
+        ["Transferred from RWTH Aachen to finish the degree in Berlin's project-based, ship-real-software curriculum."],
         side_style="subright",
     ))
     story.append(entry(
@@ -251,19 +251,25 @@ def build(family=DEFAULT_FAMILY, output=None, mirror=_DEFAULT):
         "Creator and maintainer | MIT licensed",
         "<link href='https://github.com/Malek1414/MOZCODE'>github.com/Malek1414/MOZCODE</link>",
         [
-            "Built a local MCP server for Claude Code, Codex, and OpenAI models that uses tree-sitter ASTs to return requested symbols and structural outlines instead of entire source files.",
-            "Implemented grouped code search, AST-anchored edits with parse validation, graceful fallbacks, and cached read-only SQLite/PostgreSQL schema introspection.",
-            "Instrumented an append-only JSONL ledger and self-contained SVG dashboard; measured an estimated 1,749,436 input tokens avoided across 938 optimized calls, with 80% average payload reduction versus disclosed whole-file/plain-grep baselines.",
+            "Built a local MCP server for Claude Code, Codex, and OpenAI models that uses tree-sitter ASTs to return requested symbols and outlines instead of entire files, with grouped search, AST-anchored edits, and read-only SQLite/PostgreSQL schema introspection.",
+            "Instrumented an append-only JSONL ledger and self-contained SVG dashboard; measured an estimated 2,180,966 input tokens avoided across 1,159 optimized calls and 16 projects, with 80% average payload reduction versus disclosed whole-file/plain-grep baselines.",
         ],
         side_style="link", side_width=48 * mm,
+    ))
+    story.append(entry(
+        styles, "FollowCam - Robot Cameraman and Game Analytics", "Aug 2026",
+        "Winner, CODE Hackathon Berlin", "Swift | YOLOv8 | Arduino",
+        [
+            "First place with a two-person team: a 3D-printed ring-and-fork mount on a metal-gear servo turns any tripod into a ~€20 auto-tracking camera, steered by on-device vision from an iOS app.",
+            "Fine-tuned YOLOv8 pipeline tracked players on real league footage, read jersey numbers, mapped the play to a 2D court, and computed shots, points, and possession - attempt detection human-checked at 96% precision.",
+        ],
+        side_style="subright", side_width=44 * mm,
     ))
     story.append(entry(
         styles, "Second Brain - End-to-End RAG Knowledge System", "2025",
         "Personal knowledge capture and cited retrieval", "Node.js | ChromaDB | Claude API",
         [
-            "Built one retrieval loop from voice/text capture through embedding and ChromaDB indexing to structured Markdown synchronization with an Obsidian vault.",
-            "Implemented an Animus chat interface that retrieves passages from the user's corpus and generates Claude answers with citations back to the source notes.",
-            "Integrated Node.js, Express, LangChain/LlamaIndex, ChromaDB, the Anthropic Claude API, Obsidian vault sync, and a vanilla JavaScript/Canvas interface.",
+            "Built one retrieval loop from voice/text capture through embedding and ChromaDB indexing to an Obsidian vault, queried through the Animus chat interface with citations back to the source notes; a native SwiftUI iOS app now captures and transcribes voice notes into the same loop.",
         ],
         side_style="subright", side_width=44 * mm,
     ))
@@ -284,8 +290,7 @@ def build(family=DEFAULT_FAMILY, output=None, mirror=_DEFAULT):
     # ── Certifications ──
     section(story, styles, "Certifications")
     story.append(Paragraph(
-        "Anthropic: Introduction to Model Context Protocol; Model Context Protocol - Advanced Topics; "
-        "Introduction to Agent Skills; Introduction to Subagents (May 2026)",
+        "Anthropic: Model Context Protocol (Introduction + Advanced Topics); Agent Skills; Subagents (May 2026)",
         styles["body"],
     ))
 
@@ -301,8 +306,29 @@ def build(family=DEFAULT_FAMILY, output=None, mirror=_DEFAULT):
         side_style="subright",
     ))
 
+    # ── Social ──
+    section(story, styles, "Social")
+    story.append(entry(
+        styles,
+        "<link href='https://summerup.berlin'>SummerUP Berlin</link> - Team Offerprofi",
+        "Aug 2026",
+        "One week of building and selling - top 10 of 72 teams",
+        "<link href='https://offerprofi.de'>offerprofi.de</link> | "
+        "<link href='https://github.com/Malek1414/Offerprofi'>github.com/Malek1414/Offerprofi</link>",
+        [
+            "Built the AI layer, whose extraction schema cannot invent a price - every line item is quoted from the source document or flagged uncertain.",
+        ],
+        side_style="link", side_width=66 * mm,
+    ))
+
     # ── Awards ──
     section(story, styles, "Awards and Honors")
+    story.append(Paragraph(
+        f"<font name='{f['bold']}'>Winner, CODE Hackathon Berlin (Aug 2026)</font> - first place with "
+        "FollowCam, a ~€20 auto-tracking robot cameraman with a live game-analytics pipeline, built and "
+        "pitched as a two-person team.",
+        styles["body"],
+    ))
     story.append(Paragraph(
         f"<font name='{f['bold']}'>State Champion, Basketball</font> - won a national/state "
         "championship title in the youth division.",
@@ -310,7 +336,7 @@ def build(family=DEFAULT_FAMILY, output=None, mirror=_DEFAULT):
     ))
 
     story.append(Paragraph(
-        "MOZCODE figures are estimates against local counterfactual baselines, not billing data. Snapshot: 6 Aug 2026.",
+        "MOZCODE figures are estimates against local counterfactual baselines, not billing data. Snapshot: 29 Aug 2026.",
         styles["note"],
     ))
 

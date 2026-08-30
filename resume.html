@@ -52,7 +52,7 @@
     <div class="entry">
       <div class="entry-head"><div class="entry-title">CODE University of Applied Sciences</div><div class="entry-date">2026 - Present</div></div>
       <div class="entry-sub"><span>B.Sc. Software Engineering - final year</span><span>Berlin, Germany</span></div>
-      <ul><li>Transferred from RWTH Aachen University to complete the final year of the degree in Berlin, moving to a project-based curriculum built around shipping real software.</li></ul>
+      <ul><li>Transferred from RWTH Aachen to finish the degree in Berlin's project-based, ship-real-software curriculum.</li></ul>
     </div>
     <div class="entry">
       <div class="entry-head"><div class="entry-title">RWTH Aachen University</div><div class="entry-date">Oct 2023 - 2026</div></div>
@@ -83,18 +83,23 @@
       <div class="entry-head"><div class="entry-title">MOZCODE - Symbol-Level Context Engine for Coding Agents</div><div class="entry-date">2026</div></div>
       <div class="entry-sub"><span>Creator and maintainer | MIT licensed</span><a class="entry-link" href="https://github.com/Malek1414/MOZCODE">github.com/Malek1414/MOZCODE</a></div>
       <ul>
-        <li>Built a local MCP server for Claude Code, Codex, and OpenAI models that uses tree-sitter ASTs to return requested symbols and structural outlines instead of entire source files.</li>
-        <li>Implemented grouped code search, AST-anchored edits with parse validation, graceful fallbacks, and cached read-only SQLite/PostgreSQL schema introspection.</li>
-        <li>Instrumented an append-only JSONL ledger and self-contained SVG dashboard; measured an estimated 1,749,436 input tokens avoided across 938 optimized calls, with 80% average payload reduction versus disclosed whole-file/plain-grep baselines.</li>
+        <li>Built a local MCP server for Claude Code, Codex, and OpenAI models that uses tree-sitter ASTs to return requested symbols and outlines instead of entire files, with grouped search, AST-anchored edits, and read-only SQLite/PostgreSQL schema introspection.</li>
+        <li>Instrumented an append-only JSONL ledger and self-contained SVG dashboard; measured an estimated 2,180,966 input tokens avoided across 1,159 optimized calls and 16 projects, with 80% average payload reduction versus disclosed whole-file/plain-grep baselines.</li>
+      </ul>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><div class="entry-title">FollowCam - Robot Cameraman and Game Analytics</div><div class="entry-date">Aug 2026</div></div>
+      <div class="entry-sub"><span>Winner, CODE Hackathon Berlin</span><span>Swift | YOLOv8 | Arduino</span></div>
+      <ul>
+        <li>First place with a two-person team: a 3D-printed ring-and-fork mount on a metal-gear servo turns any tripod into a ~€20 auto-tracking camera, steered by on-device vision from an iOS app.</li>
+        <li>Fine-tuned YOLOv8 pipeline tracked players on real league footage, read jersey numbers, mapped the play to a 2D court, and computed shots, points, and possession - attempt detection human-checked at 96% precision.</li>
       </ul>
     </div>
     <div class="entry">
       <div class="entry-head"><div class="entry-title">Second Brain - End-to-End RAG Knowledge System</div><div class="entry-date">2025</div></div>
       <div class="entry-sub"><span>Personal knowledge capture and cited retrieval</span><span>Node.js | ChromaDB | Claude API</span></div>
       <ul>
-        <li>Built one retrieval loop from voice/text capture through embedding and ChromaDB indexing to structured Markdown synchronization with an Obsidian vault.</li>
-        <li>Implemented an Animus chat interface that retrieves relevant passages from the user's corpus and generates Claude answers with citations back to the source notes.</li>
-        <li>Integrated Node.js, Express, LangChain/LlamaIndex, ChromaDB, the Anthropic Claude API, Obsidian vault sync, and a vanilla JavaScript/Canvas interface.</li>
+        <li>Built one retrieval loop from voice/text capture through embedding and ChromaDB indexing to an Obsidian vault, queried through the Animus chat interface with citations back to the source notes; a native SwiftUI iOS app now captures and transcribes voice notes into the same loop.</li>
       </ul>
     </div>
   </section>
@@ -110,7 +115,7 @@
 
   <section>
     <div class="section-title">Certifications</div>
-    <p>Anthropic: Introduction to Model Context Protocol; Model Context Protocol - Advanced Topics; Introduction to Agent Skills; Introduction to Subagents (May 2026)</p>
+    <p>Anthropic: Model Context Protocol (Introduction + Advanced Topics); Agent Skills; Subagents (May 2026)</p>
   </section>
 
   <section>
@@ -126,11 +131,23 @@
   </section>
 
   <section>
+    <div class="section-title">Social</div>
+    <div class="entry">
+      <div class="entry-head"><div class="entry-title"><a href="https://summerup.berlin">SummerUP Berlin</a> - Team Offerprofi</div><div class="entry-date">Aug 2026</div></div>
+      <div class="entry-sub"><span>One week of building and selling - top 10 of 72 teams</span><a class="entry-link" href="https://offerprofi.de">offerprofi.de</a> | <a class="entry-link" href="https://github.com/Malek1414/Offerprofi">github.com/Malek1414/Offerprofi</a></div>
+      <ul>
+        <li>Built the AI layer, whose extraction schema cannot invent a price - every line item is quoted from the source document or flagged uncertain.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
     <div class="section-title">Awards and Honors</div>
+    <p><strong>Winner, CODE Hackathon Berlin (Aug 2026)</strong> - first place with FollowCam, a ~€20 auto-tracking robot cameraman with a live game-analytics pipeline, built and pitched as a two-person team.</p>
     <p><strong>State Champion, Basketball</strong> - won a national/state championship title in the youth division.</p>
   </section>
 
-  <p class="note" style="margin-top:6px">MOZCODE figures are estimates against local counterfactual baselines, not billing data. Snapshot: 6 Aug 2026.</p>
+  <p class="note" style="margin-top:6px">MOZCODE figures are estimates against local counterfactual baselines, not billing data. Snapshot: 29 Aug 2026.</p>
 </main>
 </body>
 </html>

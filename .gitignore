@@ -19,3 +19,7 @@ frontend-developer.md
 mobile-developer.md
 ui-designer.md
 assets/*-handoff.md
+
+# Local render artifacts (too large / not for publishing)
+output/*.mp4
+scripts/__pycache__/
