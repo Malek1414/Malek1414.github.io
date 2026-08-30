@@ -204,6 +204,20 @@
   .contact-email { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
   .contact-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
 
+  /* ── project detail ── */
+  .back { display: inline-block; font: 400 12.5px var(--mono); color: var(--muted); text-decoration: none; margin-bottom: 28px; }
+  .back .arr { display: inline-block; transition: transform 200ms var(--ease); }
+  .back:hover, .back:focus-visible { color: var(--text); }
+  .back:hover .arr, .back:focus-visible .arr { transform: translateX(-3px); }
+  .detail-meta { font: 400 12.5px var(--mono); color: var(--muted); margin-top: 10px; letter-spacing: 0.02em; }
+  .detail-meta .tag { color: var(--accent); }
+  .para { margin-top: 18px; color: var(--text); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+  .chip { font: 400 12px var(--mono); color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 4px 11px; }
+  .proj-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+  .pn { margin-top: 40px; border-top: 1px solid var(--border); padding-top: 16px; }
+  .pn .idx { width: 40px; }
+
   /* ── reveal & view transitions ── */
   .reveal { opacity: 0; transform: translateY(8px); transition: opacity 500ms var(--ease), transform 500ms var(--ease); }
   .reveal.in { opacity: 1; transform: none; }
@@ -496,9 +510,108 @@ function mountHome() {
   boxes.forEach(b => io.observe(b));
 }
 
-// temporary boot until the router lands
-document.getElementById('view').innerHTML = renderHome();
-mountHome();
+function renderProject(i) {
+  const pr = SITE.projects[i];
+  const n = SITE.projects.length;
+  const prev = SITE.projects[(i - 1 + n) % n];
+  const next = SITE.projects[(i + 1) % n];
+
+  const paras = pr.paragraphs.map(p => `<p class="para">${esc(p)}</p>`).join('');
+  const media = pr.media.map(mediaFigure).join('');
+  const chips = `<div class="chips">${pr.stack.map(s => `<span class="chip">${esc(s)}</span>`).join('')}</div>`;
+  const links = (pr.github || pr.demo) ? `
+    <div class="proj-links">
+      ${pr.github ? `<a class="btn" href="${esc(pr.github)}">GitHub</a>` : ''}
+      ${pr.demo ? `<a class="btn" href="${esc(pr.demo)}">Live demo</a>` : ''}
+    </div>` : '';
+
+  return `
+  <article class="box" aria-label="${esc(pr.title)}">
+    <a class="back" href="#/"><span class="arr" aria-hidden="true">←</span> Index</a>
+    <h1>${esc(pr.title)}</h1>
+    <p class="detail-meta"><span class="tag">${esc(pr.tag)}</span> · ${esc(pr.year)}</p>
+    ${paras}
+    ${media}
+    ${chips}
+    ${links}
+    <nav class="pn" aria-label="More projects">
+      <a class="row" href="#/${prev.slug}">
+        <span class="idx">prev</span>
+        <span class="row-body"><span class="row-title">${esc(prev.title)}</span></span>
+        <span class="row-arrow" aria-hidden="true">→</span>
+      </a>
+      <a class="row" href="#/${next.slug}">
+        <span class="idx">next</span>
+        <span class="row-body"><span class="row-title">${esc(next.title)}</span></span>
+        <span class="row-arrow" aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </article>`;
+}
+
+// ── ROUTER ──
+const view = document.getElementById('view');
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let homeScrollY = 0;
+let currentKind = null; // 'home' | 'project'
+
+function routeTarget() {
+  const raw = location.hash;
+  if (raw === '' || raw === '#' || raw === '#/') return { kind: 'home' };
+  if (raw.startsWith('#/')) {
+    const i = SITE.projects.findIndex(p => p.slug === raw.slice(2));
+    return i >= 0 ? { kind: 'project', i } : { kind: 'invalid' };
+  }
+  return { kind: 'anchor', id: raw.slice(1) };
+}
+
+function applyRoute() {
+  const t = routeTarget();
+
+  if (t.kind === 'invalid') { location.replace('#/'); return; }
+
+  if (t.kind === 'anchor') {
+    if (document.getElementById(t.id)) return; // browser handles in-page jump
+    view.innerHTML = renderHome();
+    mountHome();
+    currentKind = 'home';
+    document.title = 'Malek Hassan';
+    requestAnimationFrame(() => document.getElementById(t.id)?.scrollIntoView());
+    return;
+  }
+
+  if (currentKind === 'home' && t.kind === 'project') homeScrollY = scrollY;
+
+  const swap = () => {
+    if (t.kind === 'home') {
+      view.innerHTML = renderHome();
+      mountHome();
+      document.title = 'Malek Hassan';
+      const y = homeScrollY;
+      requestAnimationFrame(() => scrollTo({ top: y, left: 0, behavior: 'instant' }));
+      currentKind = 'home';
+    } else {
+      view.innerHTML = renderProject(t.i);
+      document.title = 'Malek Hassan — ' + SITE.projects[t.i].title;
+      requestAnimationFrame(() => scrollTo({ top: 0, left: 0, behavior: 'instant' }));
+      currentKind = 'project';
+    }
+  };
+
+  if (REDUCED || currentKind === null) { swap(); return; }
+
+  view.classList.add('leaving');
+  setTimeout(() => {
+    view.classList.remove('leaving');
+    swap();
+    view.classList.add('entering');
+    setTimeout(() => view.classList.remove('entering'), 300);
+  }, 150);
+}
+
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+addEventListener('hashchange', applyRoute);
+applyRoute();
 
 // ── EDGE-CONSTRAINED WEAVE (WebGL) ──
 (function initBackground() {
