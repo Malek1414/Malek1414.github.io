@@ -598,6 +598,9 @@ function applyRoute() {
     }
   };
 
+  document.querySelectorAll('.site-head nav a')
+    .forEach(a => a.toggleAttribute('aria-current', t.kind === 'home'));
+
   if (REDUCED || currentKind === null) { swap(); return; }
 
   view.classList.add('leaving');
