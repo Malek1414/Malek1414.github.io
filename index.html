@@ -184,6 +184,26 @@
   }
   .media figcaption { font: 400 12px var(--mono); color: var(--muted); margin-top: 10px; }
 
+  /* ── home sections ── */
+  .role { color: var(--muted); margin-top: 6px; font-size: 15px; }
+  .log { font: 400 12.5px var(--mono); color: var(--accent); letter-spacing: 0.02em; margin-top: 14px; }
+  .bio { margin-top: 18px; color: var(--text); }
+  .intro-links { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 22px; }
+  .intro-links a { font: 400 12.5px var(--mono); }
+
+  .mrow { display: flex; gap: 16px; align-items: baseline; padding: 12px 0; border-top: 1px solid var(--border); }
+  .mrow:first-of-type { border-top: 0; }
+  .mrow .mdate { font: 400 12px var(--mono); color: var(--muted); flex: none; width: 64px; }
+  .mrow .mtitle { display: block; font-weight: 600; font-size: 14.5px; letter-spacing: -0.01em; }
+  .mrow .msub { display: block; font-size: 13.5px; color: var(--muted); }
+
+  .skill-line { padding: 8px 0; font-size: 14px; color: var(--muted); }
+  .skill-line .area { font: 400 12px var(--mono); color: var(--text); display: block; margin-bottom: 2px; }
+  .skill-line .area::before { content: "— "; color: var(--accent); }
+
+  .contact-email { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .contact-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+
   /* ── reveal & view transitions ── */
   .reveal { opacity: 0; transform: translateY(8px); transition: opacity 500ms var(--ease), transform 500ms var(--ease); }
   .reveal.in { opacity: 1; transform: none; }
@@ -381,6 +401,104 @@ const SITE = {
     cv: 'output/pdf/Malek_Hassan_CV.pdf'
   }
 };
+
+// ── RENDERERS ──
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function mediaFigure(md) {
+  const cls = md.portrait ? 'media portrait' : 'media';
+  const body = /\.(mp4|mov|webm)$/i.test(md.src)
+    ? `<video controls preload="none" playsinline poster="${esc(md.poster || '')}" src="${esc(md.src)}"></video>`
+    : `<img loading="lazy" src="${esc(md.src)}" alt="${esc(md.caption || '')}">`;
+  return `<figure class="${cls}">${body}${md.caption ? `<figcaption>${esc(md.caption)}</figcaption>` : ''}</figure>`;
+}
+
+function renderHome() {
+  const p = SITE.projects.map((pr, i) => `
+    <a class="row" href="#/${pr.slug}">
+      <span class="idx">${String(i + 1).padStart(2, '0')}</span>
+      <span class="row-body">
+        <span class="row-title">${esc(pr.title)}</span>
+        <span class="row-sub">${esc(pr.oneLiner)}</span>
+      </span>
+      <span class="row-year">${esc(pr.year)}</span>
+      <span class="row-arrow" aria-hidden="true">→</span>
+    </a>`).join('');
+
+  const m = SITE.milestones.map(ms => `
+    <div class="mrow">
+      <span class="mdate">${esc(ms.date)}</span>
+      <span class="row-body">
+        <span class="mtitle">${esc(ms.title)}</span>
+        <span class="msub">${esc(ms.oneLiner)}</span>
+      </span>
+    </div>`).join('');
+
+  const film = SITE.milestones[0].media;
+  const sk = SITE.skills.map(g => `
+    <p class="skill-line"><span class="area">${esc(g.area)}</span>${g.items.map(esc).join(' · ')}</p>`).join('');
+
+  const c = SITE.contact;
+  return `
+  <section class="box reveal" id="intro" aria-label="Introduction">
+    <h1>${esc(SITE.intro.name)}</h1>
+    <p class="role">${esc(SITE.intro.role)}</p>
+    <p class="log">${esc(SITE.intro.log)}</p>
+    <p class="bio">${esc(SITE.intro.bio)}</p>
+    <div class="intro-links">
+      <a class="link" href="${esc(c.github)}">github</a>
+      <a class="link" href="${esc(c.linkedin)}">linkedin</a>
+      <a class="link" href="mailto:${esc(c.email)}">email</a>
+      <a class="link" href="${esc(c.cv)}">cv.pdf</a>
+    </div>
+  </section>
+
+  <section class="box reveal" id="projects" aria-label="Projects">
+    <span class="eyebrow"><span class="tilde">~/</span>projects</span>
+    ${p}
+  </section>
+
+  <section class="box reveal" id="milestones" aria-label="Milestones">
+    <span class="eyebrow"><span class="tilde">~/</span>milestones</span>
+    ${mediaFigure(film)}
+    <div style="margin-top:26px">${m}</div>
+  </section>
+
+  <section class="box reveal" id="skills" aria-label="Skills">
+    <span class="eyebrow"><span class="tilde">~/</span>skills</span>
+    ${sk}
+  </section>
+
+  <section class="box reveal" id="contact" aria-label="Contact">
+    <span class="eyebrow"><span class="tilde">~/</span>contact</span>
+    <a class="contact-email link" href="mailto:${esc(c.email)}">${esc(c.email)}</a>
+    <div class="contact-links">
+      <a class="btn" href="${esc(c.github)}">GitHub</a>
+      <a class="btn" href="${esc(c.linkedin)}">LinkedIn</a>
+      <a class="btn" href="${esc(c.cv)}">Download CV</a>
+    </div>
+  </section>`;
+}
+
+function mountHome() {
+  const boxes = document.querySelectorAll('.reveal');
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    boxes.forEach(b => b.classList.add('in'));
+    return;
+  }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.15 });
+  boxes.forEach(b => io.observe(b));
+}
+
+// temporary boot until the router lands
+document.getElementById('view').innerHTML = renderHome();
+mountHome();
 
 // ── EDGE-CONSTRAINED WEAVE (WebGL) ──
 (function initBackground() {
