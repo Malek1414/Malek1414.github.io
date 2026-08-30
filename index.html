@@ -6,7 +6,7 @@
 <title>Malek Hassan</title>
 <meta name="description" content="Malek Hassan — AI systems engineer in Berlin. Local-first tools, deterministic guardrails around AI, and commit logs that read like a story.">
 <meta property="og:title" content="Malek Hassan">
-<meta property="og:description" content="AI systems engineer in Berlin. Eleven projects, one commit log.">
+<meta property="og:description" content="AI systems engineer in Berlin. Twelve projects, one commit log.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://malek1414.github.io">
 <meta name="theme-color" content="#050505">
@@ -293,7 +293,7 @@ const SITE = {
   intro: {
     name: 'Malek Hassan',
     role: 'AI Systems Engineer — Berlin',
-    log: '783 commits Mar—Aug 2026 · 11 projects',
+    log: '783 commits Mar—Aug 2026 · 12 projects',
     bio: "I'm Malek Hassan. I build AI systems that ship — not demos. Six months ago I was studying in Aachen; since then I've open-sourced a context engine, moved to Berlin for CODE University, sold software in a week at SummerUP, and won a hackathon with a €20 robot cameraman. I like local-first tools, deterministic guardrails around AI, and commit logs that read like a story."
   },
   me: {
@@ -338,6 +338,16 @@ const SITE = {
       stack: ['TypeScript', 'Node.js', 'MCP SDK', 'web-tree-sitter / WASM', 'gpt-tokenizer', 'PostgreSQL', 'SQLite', 'esbuild', 'Vitest'],
       github: 'https://github.com/Malek1414/MOZCODE', demo: '',
       media: [ { src: 'assets/demos/projects/mozcode/mozcode-dashboard-tour.mp4', caption: 'The live savings dashboard — 2.2 million AI tokens saved across 16 real projects', poster: 'assets/demos/projects/mozcode/mozcode-dashboard-tour.jpg' } ] },
+
+    { slug: 'mccodz', title: 'McCODZ', tag: 'Dev Tools / IDE', year: '2026',
+      oneLiner: 'My own coding environment — agent, editor, and IDE, owned end to end.',
+      paragraphs: [
+        "My self-maintained coding environment, built so the whole toolchain is owned in-house instead of riding someone else's release cycle. The agent lane is a maintained fork of the pi agent harness: one CLI that talks to every major model provider — Anthropic, OpenAI, Google, Groq, local llama.cpp and a dozen more — with a full terminal UI, sessions, skills, and extensions, rebranded and rewired as mccodz.",
+        "The editor lane is McCODZ Studio, a deliberately small VS-Code-style editor built from scratch: file explorer, workspace-wide search, the Monaco editor, and integrated terminals that launch mccodz, Claude Code, or Codex right next to the code. It runs in the browser, installs as a PWA, or ships as a desktop app — and alongside it sits a full Code-OSS fork rebuilt as a standalone macOS app under the McCODZ name. Actively developed; this is the one I'm taking further."
+      ],
+      stack: ['TypeScript', 'Node.js', 'Monaco', 'xterm.js + node-pty', 'ripgrep', 'Electron / PWA', 'Code-OSS fork'],
+      github: 'https://github.com/Malek1414/McCODZ', demo: '',
+      media: [ { src: 'assets/demos/projects/mccodz/mccodz-studio-tour.mp4', caption: 'McCODZ Studio — explorer, search, the Monaco editor, and coding agents living in the built-in terminal', poster: 'assets/demos/projects/mccodz/mccodz-studio-tour.jpg' } ] },
 
     { slug: 'followcam', title: 'FollowCam', tag: 'Hardware / Computer Vision', year: '2026',
       oneLiner: 'A €20 robot cameraman — first place at the CODE Hackathon Berlin.',
