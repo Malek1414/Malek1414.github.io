@@ -6,7 +6,7 @@
 <title>Malek Hassan</title>
 <meta name="description" content="Malek Hassan — AI systems engineer in Berlin. Local-first tools, deterministic guardrails around AI, and commit logs that read like a story.">
 <meta property="og:title" content="Malek Hassan">
-<meta property="og:description" content="AI systems engineer in Berlin. Six months, ten projects, one commit log.">
+<meta property="og:description" content="AI systems engineer in Berlin. Eleven projects, one commit log.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://malek1414.github.io">
 <meta name="theme-color" content="#050505">
@@ -218,6 +218,18 @@
   .pn { margin-top: 40px; border-top: 1px solid var(--border); padding-top: 16px; }
   .pn .idx { width: 40px; }
 
+  /* ── me gallery ── */
+  .gallery { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; grid-auto-flow: dense; gap: 14px; margin-top: 26px; }
+  .gcell { position: relative; grid-row: span 2; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: #000; margin: 0; }
+  .gcell.tall { grid-row: span 3; }
+  .gcell img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 600ms var(--ease); }
+  .gcell::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(5,5,5,0.6), transparent 45%); opacity: 0; transition: opacity 300ms var(--ease); }
+  .gcell:hover img { transform: scale(1.04); }
+  .gcell:hover::after { opacity: 1; }
+  .gcell .gcap { position: absolute; left: 12px; bottom: 10px; z-index: 1; font: 400 11.5px var(--mono); color: var(--text); opacity: 0; transform: translateY(4px); transition: opacity 300ms var(--ease), transform 300ms var(--ease); }
+  .gcell:hover .gcap, .gcell:focus-within .gcap { opacity: 1; transform: none; }
+  @media (max-width: 720px) { .gallery { grid-auto-rows: 110px; gap: 10px; } }
+
   /* ── reveal & view transitions ── */
   .reveal { opacity: 0; transform: translateY(8px); transition: opacity 500ms var(--ease), transform 500ms var(--ease); }
   .reveal.in { opacity: 1; transform: none; }
@@ -249,6 +261,8 @@
     .row .row-arrow, .btn, .skip-link { transition: none; }
     .row:hover .row-arrow, .row:focus-visible .row-arrow { transform: none; }
     .btn:hover, .btn:focus-visible { transform: none; }
+    .gcell img, .gcell::after, .gcell .gcap { transition: none; }
+    .gcell:hover img { transform: none; }
   }
 </style>
 </head>
@@ -262,6 +276,7 @@
   <nav aria-label="Sections">
     <a href="#projects">projects</a>
     <a href="#milestones">milestones</a>
+    <a href="#/me">me</a>
     <a href="#contact">contact</a>
   </nav>
 </header>
@@ -278,8 +293,35 @@ const SITE = {
   intro: {
     name: 'Malek Hassan',
     role: 'AI Systems Engineer — Berlin',
-    log: '783 commits · 10 projects · Mar—Aug 2026',
+    log: '783 commits Mar—Aug 2026 · 11 projects',
     bio: "I'm Malek Hassan. I build AI systems that ship — not demos. Six months ago I was studying in Aachen; since then I've open-sourced a context engine, moved to Berlin for CODE University, sold software in a week at SummerUP, and won a hackathon with a €20 robot cameraman. I like local-first tools, deterministic guardrails around AI, and commit logs that read like a story."
+  },
+  me: {
+    title: 'Off the keyboard',
+    paragraphs: [
+      "The commit log is half the story. I play basketball — pickup runs and league games, the same footage FollowCam was built to film — and I'm in the gym most mornings before the first commit of the day.",
+      "The rest: Cairo to Aachen to Berlin, building things with friends, and a camera roll that fills up about as fast as the git log."
+    ],
+    gallery: [
+      { src: 'assets/me/me-01-roots.jpg', caption: 'Giza, where it starts', tall: false },
+      { src: 'assets/me/me-02-pool.jpg', caption: 'Pool night', tall: false },
+      { src: 'assets/me/me-03-training-partner.jpg', caption: 'Training partner', tall: true },
+      { src: 'assets/me/me-04-red-sea.jpg', caption: 'Red Sea', tall: false },
+      { src: 'assets/me/me-05-night-run.jpg', caption: 'Night court, Cairo', tall: false },
+      { src: 'assets/me/me-06-gym-notes.jpg', caption: 'Notes on the mirror', tall: true },
+      { src: 'assets/me/me-07-after-the-run.jpg', caption: 'After the run', tall: false },
+      { src: 'assets/me/me-08-padel.jpg', caption: 'Padel', tall: true },
+      { src: 'assets/me/me-09-old-friends.jpg', caption: 'Old friends', tall: false },
+      { src: 'assets/me/me-10-morning-session.jpg', caption: 'Morning session', tall: true },
+      { src: 'assets/me/me-11-code-campus.jpg', caption: 'CODE, Berlin', tall: false },
+      { src: 'assets/me/me-12-berlin.jpg', caption: 'Museum Island, Berlin', tall: false },
+      { src: 'assets/me/me-13-work-in-progress.jpg', caption: 'Work in progress', tall: true },
+      { src: 'assets/me/me-14-rim.jpg', caption: 'At the rim', tall: true },
+      { src: 'assets/me/me-15-repeat.jpg', caption: 'Repeat', tall: true },
+      { src: 'assets/me/me-16-hang-time.jpg', caption: 'Hang time', tall: true },
+      { src: 'assets/me/me-17-campus.jpg', caption: 'Campus', tall: true },
+      { src: 'assets/me/me-18-trail.jpg', caption: 'Trail above the city', tall: true }
+    ]
   },
   projects: [
     { slug: 'mozcode', title: 'MOZCODE', tag: 'AI Tooling / MCP', year: '2026',
@@ -367,6 +409,15 @@ const SITE = {
       ],
       stack: ['TypeScript', 'Solana web3 stack', 'DEX aggregator APIs'],
       github: '', demo: '', media: [] },
+
+    { slug: 'loon-link', title: 'Loon Link', tag: 'Web / Intelligence', year: '2025',
+      oneLiner: 'Point it at a URL — get back the company behind it.',
+      paragraphs: [
+        'A company-intelligence crawler. Point it at any URL, choose a crawl depth, and Loon Link spiders the site and returns a clean profile — contact emails, phone numbers, social links, the detected front-end tech stack, and a typed map of every page it found. Crawled companies are saved to revisit anytime.'
+      ],
+      stack: ['Java', 'Spring Boot', 'Vue 3', 'REST API'],
+      github: '', demo: '',
+      media: [ { src: 'assets/demos/testimonials/loon-link-testimonial.mp4', caption: 'Apple scrape walkthrough', poster: 'assets/demos/testimonials/loon-link-testimonial.png' } ] },
 
     { slug: 'portfolio', title: 'Personal Portfolio', tag: 'Web', year: '2026',
       oneLiner: 'This site — one hand-built file with a woven WebGL frame.',
@@ -549,6 +600,23 @@ function renderProject(i) {
   </article>`;
 }
 
+function renderMe() {
+  const paras = SITE.me.paragraphs.map(p => `<p class="para">${esc(p)}</p>`).join('');
+  const g = SITE.me.gallery.map((ph, i) => `
+    <figure class="gcell${ph.tall ? ' tall' : ''} reveal" style="transition-delay:${(i % 6) * 60}ms">
+      <img loading="lazy" src="${esc(ph.src)}" alt="${esc(ph.caption)}">
+      <figcaption class="gcap">${esc(ph.caption)}</figcaption>
+    </figure>`).join('');
+  return `
+  <article class="box" aria-label="Me">
+    <a class="back" href="#/"><span class="arr" aria-hidden="true">←</span> Index</a>
+    <span class="eyebrow"><span class="tilde">~/</span>me</span>
+    <h1>${esc(SITE.me.title)}</h1>
+    ${paras}
+    <div class="gallery">${g}</div>
+  </article>`;
+}
+
 // ── ROUTER ──
 const view = document.getElementById('view');
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -558,6 +626,7 @@ let currentKind = null; // 'home' | 'project'
 function routeTarget() {
   const raw = location.hash;
   if (raw === '' || raw === '#' || raw === '#/') return { kind: 'home' };
+  if (raw === '#/me') return { kind: 'me' };
   if (raw.startsWith('#/')) {
     const i = SITE.projects.findIndex(p => p.slug === raw.slice(2));
     return i >= 0 ? { kind: 'project', i } : { kind: 'invalid' };
@@ -580,7 +649,7 @@ function applyRoute() {
     return;
   }
 
-  if (currentKind === 'home' && t.kind === 'project') homeScrollY = scrollY;
+  if (currentKind === 'home' && (t.kind === 'project' || t.kind === 'me')) homeScrollY = scrollY;
 
   const swap = () => {
     if (t.kind === 'home') {
@@ -590,6 +659,12 @@ function applyRoute() {
       const y = homeScrollY;
       requestAnimationFrame(() => scrollTo({ top: y, left: 0, behavior: 'instant' }));
       currentKind = 'home';
+    } else if (t.kind === 'me') {
+      view.innerHTML = renderMe();
+      mountHome(); // wires .reveal observers (respects reduced motion)
+      document.title = 'Malek Hassan — Me';
+      requestAnimationFrame(() => scrollTo({ top: 0, left: 0, behavior: 'instant' }));
+      currentKind = 'me';
     } else {
       view.innerHTML = renderProject(t.i);
       document.title = 'Malek Hassan — ' + SITE.projects[t.i].title;
@@ -598,8 +673,10 @@ function applyRoute() {
     }
   };
 
-  document.querySelectorAll('.site-head nav a')
-    .forEach(a => a.toggleAttribute('aria-current', t.kind === 'home'));
+  document.querySelectorAll('.site-head nav a').forEach(a => {
+    const me = a.getAttribute('href') === '#/me';
+    a.toggleAttribute('aria-current', me ? t.kind === 'me' : t.kind === 'home');
+  });
 
   if (REDUCED || currentKind === null) { swap(); return; }
 
