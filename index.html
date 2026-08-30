@@ -239,6 +239,149 @@
 <script>
 'use strict';
 
+// ── CONTENT ──
+const SITE = {
+  intro: {
+    name: 'Malek Hassan',
+    role: 'AI Systems Engineer — Berlin',
+    log: '783 commits · 10 projects · Mar—Aug 2026',
+    bio: "I'm Malek Hassan. I build AI systems that ship — not demos. Six months ago I was studying in Aachen; since then I've open-sourced a context engine, moved to Berlin for CODE University, sold software in a week at SummerUP, and won a hackathon with a €20 robot cameraman. I like local-first tools, deterministic guardrails around AI, and commit logs that read like a story."
+  },
+  projects: [
+    { slug: 'mozcode', title: 'MOZCODE', tag: 'AI Tooling / MCP', year: '2026',
+      oneLiner: 'A local-first context engine that saves coding agents millions of tokens.',
+      paragraphs: [
+        'An MIT-licensed, local-first context engine for coding agents. It parses TypeScript, TSX, JavaScript, and Python with tree-sitter; returns symbols and collapsed outlines instead of whole files; groups search hits by function; performs AST-anchored edits; and maps SQLite/PostgreSQL schemas — all so the model reads what it needs, not what the file happens to contain.',
+        'Every call is metered to an append-only ledger with a self-contained dashboard. Measured snapshot: 2,180,966 input tokens avoided across 1,159 optimized calls and 16 projects, with 80% average payload reduction versus naive whole-file reads and plain grep.'
+      ],
+      stack: ['TypeScript', 'Node.js', 'MCP SDK', 'web-tree-sitter / WASM', 'gpt-tokenizer', 'PostgreSQL', 'SQLite', 'esbuild', 'Vitest'],
+      github: 'https://github.com/Malek1414/MOZCODE', demo: '', media: [] },
+
+    { slug: 'followcam', title: 'FollowCam', tag: 'Hardware / Computer Vision', year: '2026',
+      oneLiner: 'A €20 robot cameraman — first place at the CODE Hackathon Berlin.',
+      paragraphs: [
+        'FollowCam retrofits the tripod you already own into a ~€20 robot cameraman: a 3D-printed ring clamps the tripod, a fork arm on a metal-gear servo steers the pan handle, an Arduino drives it, and an iOS app tracks the ball on-device. Built and pitched as a two-person team in one weekend — first place at the CODE hackathon in Berlin, August 2026.',
+        'The video is the input, not the product. A fine-tuned YOLOv8 pipeline tracked every player on real league game film, read jersey numbers, mapped the play onto a 2D court, and computed shots, points, and a possession timeline as a live dashboard — shot-attempt detection human-checked at 96% precision.'
+      ],
+      stack: ['Swift / SwiftUI', 'Python', 'YOLOv8 / PyTorch', 'OpenCV', 'Arduino / C++', '3D-printed hardware'],
+      github: '', demo: '',
+      media: [ { src: 'assets/demos/followcam-combined.mp4', caption: 'The rig, then the live analytics — 30 seconds', poster: 'assets/demos/followcam-combined.jpg' } ] },
+
+    { slug: 'offerprofi', title: 'Offerprofi', tag: 'AI / B2B SaaS', year: '2026',
+      oneLiner: 'Inquiry in, branded quote out — AI that can never invent a price.',
+      paragraphs: [
+        'Small event agencies run pre-sales over WhatsApp and email, then lose 30–60 minutes per quote in Word — and often the deal, because the fastest credible quote wins. Offerprofi acknowledges an inquiry in seconds, parses it into structured event data, and prices it deterministically against the agency\'s own catalogue.',
+        'The AI maps intent to items but never does arithmetic and can never invent a price; the customer iterates inside hard guardrails until they explicitly accept. Multi-tenant on PostgreSQL row-level security, with automated adverse decisions excluded by design. Built with Team Offerprofi at SummerUP Berlin 2026 — top 10 of 72 teams, with a signed letter of intent from a real agency during the event week.'
+      ],
+      stack: ['Next.js', 'TypeScript', 'PostgreSQL + RLS', 'pgvector', 'Anthropic Claude API'],
+      github: 'https://github.com/Malek1414/Offerprofi', demo: '',
+      media: [
+        { src: 'assets/demos/offerprofi-demo.mp4', caption: 'Inquiry in, branded quote out — product walkthrough', poster: 'assets/showcase/offerprofi/03-inbox-desktop.png' },
+        { src: 'assets/showcase/offerprofi/02-onboarding-desktop.png', caption: 'Catalogue onboarding' },
+        { src: 'assets/showcase/offerprofi/08-real-quote-customer-view.png', caption: 'What the customer receives' }
+      ] },
+
+    { slug: 'contexta', title: 'Contexta', tag: 'Local AI / Desktop', year: '2026',
+      oneLiner: 'Professional AI that never leaves your machine.',
+      paragraphs: [
+        'Contexta runs open models entirely locally — llama.cpp sidecars with Qwen3 for chat and nomic-embed for vectors — indexes the document folders you point it at, and answers questions and drafts documents grounded in those files, with a citation for every fact and gaps bracketed instead of invented.',
+        'The first vertical is Contexta for Law: six drafting workflows for solo and small-firm lawyers, each grounded in the matter\'s own documents. Facts come from hybrid BM25 + vector retrieval, never from the model\'s memory, and a built-in MCP server lets Claude search the corpus — strictly opt-in.'
+      ],
+      stack: ['Tauri v2 (Rust + React)', 'llama.cpp', 'Zero-dependency Node retrieval engine'],
+      github: '', demo: '',
+      media: [ { src: 'assets/showcase/contexta/contexta-landing.png', caption: 'Local AI for privileged work — no cloud, no account' } ] },
+
+    { slug: 'oracle', title: 'ORACLE', tag: 'AI / Insurance', year: '2026',
+      oneLiner: 'A voice-first AI claims adjuster — average claim handled in 2:44.',
+      paragraphs: [
+        'A voice-first AI insurance claim agent. The claimant describes the accident out loud — ORACLE runs the intake, extracts the details, parses the claim PDFs, files the FNOL, and hands a decision-ready packet to the adjuster. Average claim: 2 minutes 44 seconds.'
+      ],
+      stack: ['Next.js 16', 'React 19', 'TypeScript', 'Supabase', 'Tailwind', 'Framer Motion', 'Recharts', 'Zustand', 'pdf-lib / pdf.js', 'Anthropic Claude API'],
+      github: 'https://github.com/Malek1414/ORACLE', demo: '',
+      media: [
+        { src: 'assets/showcase/oracle/oracle-hero.png', caption: 'Two minutes, voice-first' },
+        { src: 'assets/showcase/oracle/oracle-file-claim.png', caption: 'Describe the accident' },
+        { src: 'assets/showcase/oracle/oracle-dashboard.png', caption: 'Live claim dashboard' }
+      ] },
+
+    { slug: 'second-brain', title: 'Second Brain', tag: 'AI / RAG', year: '2025',
+      oneLiner: 'One RAG loop from voice note to cited answer.',
+      paragraphs: [
+        'A single end-to-end RAG system where note-taking, storage, and retrieval are one loop, not three separate features. Capture a note, idea, or document by voice or text; it is embedded and indexed into a vector store and filed as structured Markdown into an Obsidian vault; then query the whole corpus through the Animus chatbot, which retrieves the relevant passages from your own notes and answers with citations back to the source.',
+        'In 2026 the capture side went native: Animus now ships as a SwiftUI iOS app that records voice notes on the phone, transcribes them end to end, and files them into the same vault-and-retrieval loop.'
+      ],
+      stack: ['Node.js', 'Express', 'LangChain / LlamaIndex', 'ChromaDB', 'Anthropic Claude API', 'Obsidian vault sync', 'Swift / SwiftUI'],
+      github: '', demo: '',
+      media: [
+        { src: 'assets/demos/animus-capture-demo.mp4', caption: 'Animus on iOS — native SwiftUI capture', poster: 'assets/demos/animus-capture-demo.jpg', portrait: true },
+        { src: 'assets/demos/testimonials/second-brain-combined.mp4', caption: 'Animus — capture to vault, then query', poster: 'assets/demos/testimonials/second-brain-combined.png' }
+      ] },
+
+    { slug: 'finance-wizz', title: 'finance-wizz', tag: 'AI / Fintech', year: '2025',
+      oneLiner: 'Claude-powered, document-grounded analysis of your own bank statements.',
+      paragraphs: [
+        'A full-stack AI financial advisor. Upload bank statements or financial PDFs and get Claude-powered, document-grounded analysis — spending breakdowns, trends, and plain-language answers traced back to the source figures.'
+      ],
+      stack: ['React 19', 'Vite', 'TanStack Query', 'D3', 'Recharts', 'Framer Motion', 'Express', 'TypeScript', 'PostgreSQL', 'Anthropic SDK'],
+      github: 'https://github.com/Malek1414/finance-wizz', demo: '',
+      media: [ { src: 'assets/demos/testimonials/finance-wizz-testimonial.mp4', caption: 'Client demo reel', poster: 'assets/demos/testimonials/finance-wizz-testimonial.png' } ] },
+
+    { slug: 'solana-arb-bot', title: 'Solana Arbitrage Bot', tag: 'Web3 / Trading', year: '2025',
+      oneLiner: 'Scanning Solana DEXes for price gaps that clear fees.',
+      paragraphs: [
+        'A Solana arbitrage bot that continuously scans decentralized exchanges for price gaps and executes trades when the spread clears fees — grounded in original research into on-chain market microstructure and DEX liquidity.'
+      ],
+      stack: ['TypeScript', 'Solana web3 stack', 'DEX aggregator APIs'],
+      github: '', demo: '', media: [] },
+
+    { slug: 'portfolio', title: 'Personal Portfolio', tag: 'Web', year: '2026',
+      oneLiner: 'This site — one hand-built file with a woven WebGL frame.',
+      paragraphs: [
+        'This site. A single hand-built file: a luminous weave shader constrained to the viewport edges, a vibranium cursor spotlight, boxed sections, and hash-routed project pages — no framework, no build step, no external requests.'
+      ],
+      stack: ['HTML', 'CSS', 'JavaScript', 'WebGL'],
+      github: 'https://github.com/Malek1414/Malek1414.github.io', demo: 'https://malek1414.github.io', media: [] },
+
+    { slug: 'hustlr', title: 'HUSTLR', tag: 'iOS / Productivity', year: '2025',
+      oneLiner: 'Four pillars, one daily Ascension score.',
+      paragraphs: [
+        'A native iOS self-optimization app. HUSTLR rolls four weighted pillars — Appeal, Status, Money, and Vitality — into one daily Ascension score, writes a brutal-honesty status line, and turns a one-line goal into a validated, recovery-adaptive plan. Phone-first and built for fast daily check-ins, so progress stays visible without becoming a bloated dashboard.'
+      ],
+      stack: ['Swift', 'SwiftUI', 'SwiftData (CloudKit-ready)'],
+      github: '', demo: '',
+      media: [
+        { src: 'assets/demos/hustlr-dark-demo.mp4', caption: 'Dark-mode tour — Today, Create, Body, Status, Goals', poster: 'assets/demos/hustlr-dark-demo.jpg', portrait: true },
+        { src: 'assets/demos/testimonials/hustlr-testimonial.mp4', caption: 'Daily momentum walkthrough', poster: 'assets/demos/testimonials/hustlr-testimonial.png', portrait: true }
+      ] }
+  ],
+  milestones: [
+    { date: '2026-08', title: 'The Commit Log — six months, one camera roll',
+      oneLiner: 'Every frame taken within hours of a real commit; cut, captioned, and voiced by an agentic pipeline.',
+      media: { src: 'assets/demos/commit-log-journey.mp4', caption: 'Six months of shipping, narrated commit by commit', poster: 'assets/demos/commit-log-journey.jpg' } },
+    { date: '2026-08', title: 'First place — CODE Hackathon Berlin', oneLiner: 'FollowCam: a €20 robot cameraman, built and pitched in a weekend as a two-person team.' },
+    { date: '2026-08', title: 'Top 10 of 72 — SummerUP Berlin', oneLiner: 'Offerprofi closed the event week with a signed letter of intent from a real agency.' },
+    { date: '2026-08', title: 'Moved to Berlin — CODE University', oneLiner: 'Final year of the degree in a project-based, ship-real-software curriculum, after two years at RWTH Aachen.' },
+    { date: '2026-07', title: 'MOZCODE open-sourced', oneLiner: '2.18M input tokens avoided across 16 projects — 80% average payload reduction, measured.' },
+    { date: '2026-04', title: 'ORACLE shipped end to end', oneLiner: 'Voice-first claims adjudication — average claim handled in 2:44.' },
+    { date: '2026', title: 'Anthropic certificate — Advanced MCP topics', oneLiner: 'MCP from first principles to advanced topics, applied across all agentic work since.' },
+    { date: '2025', title: 'finance-wizz shipped', oneLiner: 'Document-grounded AI financial analysis, traced back to the source figures.' },
+    { date: '2025', title: 'Second Brain shipped', oneLiner: 'Capture, vault, and cited retrieval as one loop — later extended with a native iOS capture app.' },
+    { date: '2025', title: 'HUSTLR shipped', oneLiner: 'A native iOS momentum app: four pillars, one daily score.' }
+  ],
+  skills: [
+    { area: 'AI', items: ['Anthropic Claude API', 'Model Context Protocol', 'RAG', 'LangChain / LlamaIndex', 'ChromaDB', 'Tree-sitter', 'Prompt Engineering'] },
+    { area: 'Frontend', items: ['TypeScript', 'React 19', 'Next.js 16', 'Vite', 'Vue 3', 'Tailwind CSS', 'D3.js', 'Recharts', 'Framer Motion', 'TanStack Query', 'Zustand'] },
+    { area: 'Backend & Data', items: ['Node.js', 'Express', 'Python', 'Java / Spring Boot', 'REST APIs', 'PostgreSQL', 'SQLite', 'Supabase'] },
+    { area: 'Mobile', items: ['Swift', 'SwiftUI', 'SwiftData'] }
+  ],
+  contact: {
+    email: 'malek.korashi@gmail.com',
+    github: 'https://github.com/Malek1414',
+    linkedin: 'https://linkedin.com/in/malek-hussein',
+    cv: 'output/pdf/Malek_Hassan_CV.pdf'
+  }
+};
+
 // ── EDGE-CONSTRAINED WEAVE (WebGL) ──
 (function initBackground() {
   const canvas = document.getElementById('bgCanvas');
