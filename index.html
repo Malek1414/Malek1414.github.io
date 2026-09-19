@@ -381,6 +381,19 @@ const SITE = {
     ]
   },
   projects: [
+    { slug: 'vidbridge', title: 'VidBridge', tag: 'AI / Video Pipeline', year: '2026',
+      oneLiner: 'A raw camera roll goes in; a cut, graded, captioned reel comes out.',
+      paragraphs: [
+        'A video-editing pipeline where Claude Code plans and cuts the footage, Codex CLI renders the effects, and a 13,600-line Python CLI is the deterministic plumbing between them. Perception scores every source clip for motion, stability and subject. The whole edit becomes one edit_plan.json that a human approves before anything renders. Every deliverable is then checked with ffprobe and inspected frame by frame before it is called done, under 1,121 tests.',
+        'The first demo below explains the pipeline; the second is what it produced. Both come from the same job, and no human made a cutting decision in it. Fifteen originals from a phone at IFA Berlin 2026 went in with no script, no voiceover and no cutting instructions. The pipeline dropped the six shots with nothing in them, spread their seconds across the survivors, graded through a generated HLG-to-Rec.709 LUT, set the titles in the house kit, and landed on exactly 900 frames. Next it fills the gaps it finds: when a shot is missing, a generation provider makes it straight into the slot the edit needs, and nothing is placed until a person has watched it.'
+      ],
+      stack: ['Python 3.12', 'ffmpeg / ffprobe', 'FastAPI', 'MCP', 'Anthropic Claude API', 'Codex CLI', 'DaVinci Resolve API', 'React + Tauri', 'pytest'],
+      github: '', demo: 'https://malek1414.github.io/vidbridge-public-video-demo/',
+      media: [
+        { src: 'assets/demos/projects/vidbridge/vidbridge-how-it-works.mp4', caption: 'How it works, in 48 seconds — the album, the six shots perception dropped, the approved plan, the render, and the QC checklist', poster: 'assets/demos/projects/vidbridge/vidbridge-how-it-works.jpg' },
+        { src: 'assets/demos/projects/vidbridge/vidbridge-ifa-30s.mp4', caption: 'The reel it produced — 30 seconds, 1080×1920, exactly 900 frames, cut from a raw photo album with no instructions', poster: 'assets/demos/projects/vidbridge/vidbridge-ifa-30s.jpg', portrait: true }
+      ] },
+
     { slug: 'mozcode', title: 'MOZCODE', tag: 'AI Tooling / MCP', year: '2026',
       oneLiner: 'A local-first context engine that saves coding agents millions of tokens.',
       paragraphs: [
