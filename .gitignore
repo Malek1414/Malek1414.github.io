@@ -23,3 +23,7 @@ assets/*-handoff.md
 # Local render artifacts (too large / not for publishing)
 output/*.mp4
 scripts/__pycache__/
+
+# Full-length films: over GitHub's 100 MB limit, host them elsewhere (see SITE-REDESIGN-PLAN §6)
+assets/film/*
+!assets/film/intro-web.mp4

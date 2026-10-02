@@ -2,342 +2,359 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Malek Hassan</title>
 <meta name="description" content="Malek Hassan — AI systems engineer in Berlin. Local-first tools, deterministic guardrails around AI, and commit logs that read like a story.">
 <meta property="og:title" content="Malek Hassan">
 <meta property="og:description" content="AI systems engineer in Berlin. Twelve projects, one commit log.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://malek1414.github.io">
-<meta name="theme-color" content="#050505">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23050505'/%3E%3Ccircle cx='8' cy='8' r='3.5' fill='%238B5CF6'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="assets/brand/m-coin.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;800&display=swap" rel="stylesheet">
 <style>
+  /* Values: calm · focused · consistent. Quiet at rest, present on intent.
+     Spacing stays on the 4/8 ramp; type uses regular + semibold, display uses one heavy cut. */
   :root {
-    --bg: #050505;
-    --panel: rgba(8, 8, 10, 0.72);
-    --border: rgba(255, 255, 255, 0.08);
-    --text: #ededf0;
-    --muted: #9b9ba3;
-    --accent: #8B5CF6;
-    --accent-deep: #5B21B6;
-    --ease: cubic-bezier(0.2, 0, 0, 1);
-    --font: -apple-system, BlinkMacSystemFont, Inter, "Segoe UI", sans-serif;
-    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    --bg: #000;
+    --glass: rgba(18, 18, 20, 0.58);
+    --glass-strong: rgba(18, 18, 20, 0.78);
+    --hair: rgba(255, 255, 255, 0.12);
+    --text: #f5f5f7;
+    --muted: rgba(245, 245, 247, 0.56);
+    --accent: #ff6a2b;            /* court orange — the one accent, used on intent only */
+    --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+    --spring: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", sans-serif;
+    --display: "Inter Tight", -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+    --r-outer: 24px;              /* panels float highest */
+    --r-inner: 16px;              /* media inside panels */
+    --r-control: 999px;           /* pills */
+    color-scheme: dark;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   body {
-    font-family: var(--font);
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.65;
-    font-size: 16px;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
+    font: 400 17px/1.6 var(--font); letter-spacing: -0.012em;
+    background: var(--bg); color: var(--text);
+    overflow-x: hidden; -webkit-font-smoothing: antialiased;
   }
+  ::selection { background: var(--accent); color: #000; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 8px; }
 
-  ::selection { background: rgba(91, 33, 182, 0.4); color: var(--text); }
-
-  /* ── stage layers ── */
-  #bgCanvas {
-    position: fixed; inset: 0;
-    width: 100%; height: 100%;
-    z-index: 0; pointer-events: none;
-  }
-  #spotlight {
-    position: fixed; inset: 0;
-    z-index: 1; pointer-events: none;
-    background: radial-gradient(600px circle at var(--mx, 50vw) var(--my, 30vh),
-                rgba(139, 92, 246, 0.12), transparent 70%);
-  }
-  @media (hover: none) { #spotlight { display: none; } }
-
-  /* WebGL-unavailable fallback: static purple edge vignette */
-  html.no-gl #bgCanvas { display: none; }
-  html.no-gl body::before {
-    content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  /* ── stage: a full-screen film of me, behind everything ── */
+  #bg { position: fixed; inset: 0; z-index: 0; background: #000; overflow: hidden; }
+  #bg .slot { position: absolute; inset: 0; opacity: 0; transition: opacity 900ms var(--ease); }
+  #bg .slot.on { opacity: 1; }
+  #bg .slot > img, #bg .slot > video { position: absolute; inset: 0; width: 100%; height: 100%; transform: scale(1.04); transition: transform 8s linear; }
+  #bg .slot.on > img, #bg .slot.on > video { transform: scale(1); }
+  #bg::after {                    /* legibility: a soft vignette, never a flat grey wash */
+    content: ""; position: absolute; inset: 0; pointer-events: none;
     background:
-      linear-gradient(to right,  rgba(91,33,182,0.14), transparent 180px, transparent calc(100% - 180px), rgba(91,33,182,0.14)),
-      linear-gradient(to bottom, rgba(91,33,182,0.10), transparent 180px, transparent calc(100% - 180px), rgba(91,33,182,0.10));
+      linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,.15) 30%, rgba(0,0,0,.25) 65%, rgba(0,0,0,.8)),
+      radial-gradient(120% 90% at 50% 50%, transparent 40%, rgba(0,0,0,.5));
   }
-
-  /* ── column ── */
-  .site-head, #view, .site-foot { position: relative; z-index: 2; }
-
-  .col { max-width: 680px; margin-inline: auto; padding-inline: 24px; }
+  @media (min-width: 901px) {     /* portrait footage on a wide screen: sharp on one half, the page on the dark half */
+    #bg .slot.frame-right > img, #bg .slot.frame-right > video { left: 50%; width: 50%; }
+    #bg .slot.frame-left > img, #bg .slot.frame-left > video { right: 50%; width: 50%; left: 0; }
+    #bg .slot.frame-right, #bg .slot.frame-left { background: #050505; }
+    #bg .slot.frame-right::after, #bg .slot.frame-left::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+    #bg .slot.frame-right::after { background: linear-gradient(to right, #050505 50%, rgba(5,5,5,0) 62%); }
+    #bg .slot.frame-left::after { background: linear-gradient(to left, #050505 50%, rgba(5,5,5,0) 62%); }
+  }
+  .slot { position: relative; overflow: hidden; }
+  .slot::before { content: ""; position: absolute; inset: 0; z-index: 1; background: #000; opacity: var(--dim-amt, 0); pointer-events: none; }
+  .slot > img, .slot > video { display: block; width: 100%; height: 100%; }
 
   .skip-link {
-    position: absolute; left: 24px; top: -48px; z-index: 10;
-    font: 500 13px var(--mono); color: var(--text);
-    background: var(--accent-deep); padding: 8px 14px; border-radius: 8px;
-    transition: top 180ms var(--ease);
+    position: absolute; left: 24px; top: -60px; z-index: 50;
+    font: 600 14px var(--font); color: #000; background: var(--text);
+    padding: 8px 16px; border-radius: var(--r-control); transition: top 200ms var(--ease);
   }
   .skip-link:focus-visible { top: 12px; }
 
+  /* ── header: brand left, nav right; frosted once you scroll ── */
+  .site-head, #view, .site-foot { position: relative; z-index: 2; }
   .site-head {
-    display: flex; align-items: baseline; justify-content: space-between;
-    max-width: 680px; margin-inline: auto; padding: 40px 24px 0;
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    padding: 16px max(24px, calc((100vw - 1120px) / 2));
+    transition: background 300ms var(--ease), backdrop-filter 300ms var(--ease), border-color 300ms var(--ease);
+    border-bottom: 1px solid transparent;
   }
-  .site-head .brand {
-    font: 600 15px/1 var(--font); letter-spacing: -0.01em;
-    color: var(--text); text-decoration: none;
-  }
-  .site-head nav { display: flex; gap: 22px; }
+  .site-head.frost { background: rgba(0,0,0,.55); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-color: var(--hair); }
+  .site-head .brand { display: inline-flex; align-items: center; gap: 12px; color: var(--text); text-decoration: none; font: 600 15px var(--font); letter-spacing: -0.01em; }
+  .site-head .brand .mark { width: 24px; height: 24px; background: currentColor;
+    -webkit-mask: url(assets/brand/m-mark.svg) center / contain no-repeat; mask: url(assets/brand/m-mark.svg) center / contain no-repeat; }
+  .site-head nav { display: flex; gap: 8px; }
   .site-head nav a {
-    font: 400 12.5px var(--mono); letter-spacing: 0.02em;
-    color: var(--muted); text-decoration: none;
-    transition: color 200ms var(--ease);
+    font: 400 14px var(--font); color: var(--muted); text-decoration: none;
+    padding: 6px 12px; border-radius: var(--r-control); transition: color 200ms var(--ease), background 200ms var(--ease);
   }
-  .site-head nav a:hover, .site-head nav a:focus-visible { color: var(--accent); }
+  .site-head nav a:hover, .site-head nav a:focus-visible { color: var(--text); background: rgba(255,255,255,.08); }
+  .site-head nav a[aria-current] { color: var(--text); }
 
-  /* ── boxes ── */
+  /* ── column ── */
+  .col { max-width: 1120px; margin-inline: auto; padding-inline: 24px; }
+  #view { padding: 0 0 96px; }
+
+  /* ── panels (the old boxes, now glass over film) ── */
   .box {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 36px;
+    background: var(--glass);
+    backdrop-filter: saturate(160%) blur(28px); -webkit-backdrop-filter: saturate(160%) blur(28px);
+    border: 1px solid var(--hair); border-radius: var(--r-outer);
+    padding: 40px; max-width: 760px;
     transition: border-color 300ms var(--ease);
   }
-  .box:hover { border-color: rgba(139, 92, 246, 0.25); }
-  .box + .box { margin-top: 96px; }
-  #view { padding: 96px 0 64px; }
-
-  .eyebrow {
-    font: 400 12px var(--mono); letter-spacing: 0.04em;
-    color: var(--muted); display: block; margin-bottom: 18px;
-  }
+  .box:hover { border-color: rgba(255,255,255,.2); }
+  .scene { min-height: 100svh; display: flex; align-items: center; padding-block: 96px; }
+  .scene.right { justify-content: flex-end; }
+  .eyebrow { display: block; font: 600 12px var(--font); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; }
   .eyebrow .tilde { color: var(--accent); }
-
-  h1 {
-    font-size: 30px; font-weight: 650; letter-spacing: -0.02em;
-    line-height: 1.2; color: var(--text);
-  }
-  h2 { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+  h1, h2, .display { font-family: var(--display); font-weight: 800; letter-spacing: -0.03em; line-height: 0.92; text-transform: uppercase; }
   .muted { color: var(--muted); }
-  .mono { font-family: var(--mono); }
 
   /* ── links & buttons ── */
-  .link {
-    color: var(--text); text-decoration: none;
-    background-image: linear-gradient(var(--accent), var(--accent));
-    background-repeat: no-repeat; background-size: 0% 1px; background-position: 0 100%;
-    transition: background-size 180ms var(--ease), color 180ms var(--ease);
-    padding-bottom: 1px;
-  }
-  .link:hover, .link:focus-visible { background-size: 100% 1px; color: var(--text); }
-
+  .link { color: var(--text); text-decoration: none; background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat; background-size: 0% 1px; background-position: 0 100%; transition: background-size 250ms var(--ease); padding-bottom: 2px; }
+  .link:hover, .link:focus-visible { background-size: 100% 1px; }
   .btn {
-    display: inline-block; font: 500 13.5px var(--font);
-    color: var(--text); text-decoration: none;
-    border: 1px solid var(--border); border-radius: 10px;
-    padding: 9px 16px;
-    transition: background 200ms var(--ease), transform 200ms var(--ease), border-color 200ms var(--ease);
+    display: inline-flex; align-items: center; gap: 8px;
+    font: 600 15px var(--font); color: var(--text); text-decoration: none;
+    background: rgba(255,255,255,.1); border: 1px solid var(--hair); border-radius: var(--r-control);
+    padding: 12px 20px; cursor: pointer;
+    transition: background 200ms var(--ease), transform 200ms var(--spring), color 200ms var(--ease);
   }
-  .btn:hover, .btn:focus-visible {
-    background: rgba(91, 33, 182, 0.2);
-    border-color: rgba(139, 92, 246, 0.35);
-    transform: translateY(-2px);
-  }
+  .btn:hover, .btn:focus-visible { background: rgba(255,255,255,.18); transform: translateY(-1px); }
+  .btn.primary { background: var(--text); color: #000; border-color: transparent; }
+  .btn.primary:hover { background: #fff; }
+  .btn svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .btn .fill-mark { fill: currentColor; stroke: none; }
 
-  /* ── project / milestone rows ── */
+  /* ── intro: the name leads, the panel supports, the film sits beside ── */
+  .intro { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 40px; align-items: end; width: 100%; }
+  .intro h1 { font-size: clamp(64px, 11vw, 168px); margin-bottom: 32px; text-shadow: 0 2px 40px rgba(0,0,0,.35); }
+  .intro .box { max-width: 560px; }
+  .role { font: 600 21px/1.3 var(--font); letter-spacing: -0.02em; }
+  .log { font: 600 13px var(--font); letter-spacing: 0.02em; color: var(--accent); margin-top: 8px; }
+  .bio { margin-top: 16px; color: rgba(245,245,247,.86); }
+  .intro-links { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 24px; font-size: 15px; }
+  .film-card { position: relative; width: clamp(240px, 24vw, 340px); aspect-ratio: 9 / 16; border-radius: var(--r-outer); overflow: hidden;
+    border: 1px solid var(--hair); background: #000; box-shadow: 0 40px 80px rgba(0,0,0,.5); }
+  .film-card video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .film-card .play {
+    position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 2; justify-content: center;
+    background: rgba(255,255,255,.16); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  }
+  .film-card.playing .play { opacity: 0; pointer-events: none; }
+  .tri { width: 0; height: 0; border-left: 10px solid currentColor; border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+  .scroll-cue { position: absolute; left: 50%; bottom: 24px; transform: translateX(-50%); font: 600 12px var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+  /* ── project rows (unchanged behaviour: hover recedes siblings; also swaps the film) ── */
+  .rows-box { max-width: 880px; }
+  @media (min-width: 901px) { .rows-box { max-width: min(640px, 48vw); } }
+  .rows-box h2, .scene h2 { font-size: clamp(40px, 6vw, 80px); margin-bottom: 24px; }
   .row {
-    display: flex; align-items: baseline; gap: 16px;
-    padding: 14px 12px; margin-inline: -12px;
-    border-radius: 10px; text-decoration: none;
-    transition: background 200ms var(--ease), opacity 250ms var(--ease);
+    display: flex; align-items: baseline; gap: 20px;
+    padding: 16px 16px; margin-inline: -16px; border-radius: 16px; text-decoration: none; color: var(--text);
+    transition: background 250ms var(--ease), opacity 300ms var(--ease);
   }
-  .row:hover, .row:focus-visible { background: rgba(139, 92, 246, 0.06); }
-  /* hovering one row recedes its siblings */
-  @media (hover: hover) {
-    .box:has(.row:hover) .row:not(:hover) { opacity: 0.45; }
-  }
-  .row .idx {
-    font: 400 12px var(--mono); color: var(--muted); flex: none; width: 22px;
-    transition: color 200ms var(--ease);
-  }
+  .row:hover, .row:focus-visible { background: rgba(255,255,255,.08); }
+  @media (hover: hover) { .box:has(.row:hover) .row:not(:hover) { opacity: .4; } }
+  .row .idx { font: 600 13px var(--font); color: var(--muted); flex: none; width: 28px; font-variant-numeric: tabular-nums; }
   .row:hover .idx, .row:focus-visible .idx { color: var(--accent); }
   .row .row-body { flex: 1; min-width: 0; }
-  .row .row-title {
-    display: block; font-weight: 600; font-size: 15px; letter-spacing: -0.01em;
-    color: var(--muted); transition: color 200ms var(--ease);
-  }
-  .row:hover .row-title, .row:focus-visible .row-title { color: var(--text); }
-  .row .row-sub {
-    display: block; font-size: 13.5px; color: var(--muted);
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  }
-  .row .row-year { font: 400 12px var(--mono); color: var(--muted); flex: none; }
-  .row .row-arrow {
-    flex: none; color: var(--muted);
-    transition: transform 200ms var(--ease), color 200ms var(--ease);
-  }
-  .row:hover .row-arrow, .row:focus-visible .row-arrow {
-    transform: translateX(4px); color: var(--accent);
-  }
+  .row .row-title { display: block; font: 800 24px/1.1 var(--display); letter-spacing: -0.02em; text-transform: uppercase; }
+  .row .row-sub { display: block; font-size: 15px; line-height: 1.45; color: var(--muted); margin-top: 4px; }
+  .row .row-year { font: 400 13px var(--font); color: var(--muted); flex: none; font-variant-numeric: tabular-nums; }
+  .row .row-arrow { flex: none; color: var(--muted); transition: transform 250ms var(--spring), color 200ms var(--ease); }
+  .row:hover .row-arrow, .row:focus-visible .row-arrow { transform: translateX(4px); color: var(--text); }
 
-  /* ── media ── */
-  .media { margin-top: 20px; }
-  .media video, .media img {
-    width: 100%; border-radius: 12px; border: 1px solid var(--border); display: block;
-    background: #000;
-  }
-  .media.portrait video, .media.portrait img {
-    max-height: 560px; width: auto; margin-inline: auto; object-fit: contain;
-  }
-  .media figcaption { font: 400 12px var(--mono); color: var(--muted); margin-top: 10px; }
+  /* ── media inside panels ── */
+  .media { margin-top: 24px; }
+  .media video, .media img { width: 100%; border-radius: var(--r-inner); border: 1px solid var(--hair); display: block; background: #000; }
+  .media.portrait video, .media.portrait img { max-height: 600px; width: auto; max-width: 100%; margin-inline: auto; object-fit: contain; }
+  .media figcaption { font-size: 13px; color: var(--muted); margin-top: 12px; }
 
-  /* ── home sections ── */
-  .role { color: var(--muted); margin-top: 6px; font-size: 15px; }
-  .log { font: 400 12.5px var(--mono); color: var(--accent); letter-spacing: 0.02em; margin-top: 14px; }
-  .bio { margin-top: 18px; color: var(--text); }
-  .intro-links { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 22px; }
-  .intro-links a { font: 400 12.5px var(--mono); }
-
-  /* Framing rails — pattern adapted from Brittany Chiang's portfolio, restyled for this site:
-     plain icons that lift into the accent; hairline tails fade into the purple edge glow. */
-  .social-rail, .email-rail {
-    position: fixed; bottom: 0; z-index: 3;
-    display: flex; flex-direction: column; align-items: center; gap: 20px;
-  }
-  .social-rail { left: max(24px, calc((100vw - 1120px) / 2)); }
-  .email-rail { right: max(24px, calc((100vw - 1120px) / 2)); }
-  .social-rail::after, .email-rail::after {
-    content: ""; width: 1px; height: 88px;
-    background: linear-gradient(to bottom, var(--border), rgba(139, 92, 246, 0.45));
-  }
-  .social-rail a {
-    display: grid; place-items: center; padding: 6px; color: var(--muted);
-    transition: color 200ms var(--ease), transform 200ms var(--ease);
-  }
-  .social-rail a:hover, .social-rail a:focus-visible { color: var(--accent); transform: translateY(-3px); }
-  .social-rail svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-  .social-rail .fill-mark { fill: currentColor; stroke: none; }
-  .email-rail a {
-    writing-mode: vertical-rl; text-decoration: none; padding: 6px;
-    font: 400 11.5px var(--mono); letter-spacing: 0.09em; color: var(--muted);
-    transition: color 200ms var(--ease), transform 200ms var(--ease);
-  }
-  .email-rail a:hover, .email-rail a:focus-visible { color: var(--accent); transform: translateY(-3px); }
-
-  .mrow { display: flex; gap: 16px; align-items: baseline; padding: 12px 0; border-top: 1px solid var(--border); }
+  /* ── milestones, skills, contact ── */
+  .mrow { display: flex; gap: 20px; align-items: baseline; padding: 16px 0; border-top: 1px solid var(--hair); }
   .mrow:first-of-type { border-top: 0; }
-  .mrow .mdate { font: 400 12px var(--mono); color: var(--muted); flex: none; width: 64px; }
-  .mrow .mtitle { display: block; font-weight: 600; font-size: 14.5px; letter-spacing: -0.01em; }
-  .mrow .msub { display: block; font-size: 13.5px; color: var(--muted); }
+  .mrow .mdate { font: 600 13px var(--font); color: var(--muted); flex: none; width: 72px; font-variant-numeric: tabular-nums; }
+  .mrow .mtitle { display: block; font: 600 16px/1.35 var(--font); letter-spacing: -0.015em; }
+  .mrow .msub { display: block; font-size: 15px; color: var(--muted); margin-top: 2px; }
+  .skill-line { padding: 12px 0; font-size: 16px; color: rgba(245,245,247,.8); border-top: 1px solid var(--hair); }
+  .skill-line:first-of-type { border-top: 0; }
+  .skill-line .area { display: block; font: 600 12px var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .contact-email { display: inline-block; font: 800 clamp(28px, 4.4vw, 56px)/1.05 var(--display); letter-spacing: -0.03em; text-transform: uppercase; word-break: break-word; }
+  .contact-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 
-  .skill-line { padding: 8px 0; font-size: 14px; color: var(--muted); }
-  .skill-line .area { font: 400 12px var(--mono); color: var(--text); display: block; margin-bottom: 2px; }
-  .skill-line .area::before { content: "— "; color: var(--accent); }
+  /* ── framing rails (kept from the old site) ── */
+  .social-rail, .email-rail { position: fixed; bottom: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .social-rail { left: max(24px, calc((100vw - 1240px) / 2)); }
+  .email-rail { right: max(24px, calc((100vw - 1240px) / 2)); }
+  .social-rail::after, .email-rail::after { content: ""; width: 1px; height: 56px; margin-bottom: 24px; border-radius: 1px; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,.32) 45%, rgba(255,255,255,0)); }
+  .social-rail a { display: grid; place-items: center; padding: 8px; color: var(--muted); transition: color 200ms var(--ease), transform 250ms var(--spring); }
+  .social-rail a:hover, .social-rail a:focus-visible { color: var(--text); transform: translateY(-2px); }
+  .social-rail svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .social-rail .fill-mark { fill: currentColor; stroke: none; }
+  .email-rail a { writing-mode: vertical-rl; text-decoration: none; padding: 8px; font: 400 12px var(--font); letter-spacing: .1em; color: var(--muted); transition: color 200ms var(--ease), transform 250ms var(--spring); }
+  .email-rail a:hover, .email-rail a:focus-visible { color: var(--text); transform: translateY(-2px); }
 
-  .contact-email { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
-  .contact-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-  /* icon + label buttons, using the same marks as the side rail */
-  .btn-icon { display: inline-flex; align-items: center; gap: 9px; }
-  .btn-icon svg {
-    width: 15px; height: 15px; flex: none;
-    fill: none; stroke: currentColor; stroke-width: 1.7;
-    stroke-linecap: round; stroke-linejoin: round;
-    color: var(--muted); transition: color 200ms var(--ease);
-  }
-  .btn-icon .fill-mark { fill: currentColor; stroke: none; }
-  .btn-icon:hover svg, .btn-icon:focus-visible svg { color: var(--accent); }
-
-  /* ── project detail ── */
-  .back { display: inline-block; font: 400 12.5px var(--mono); color: var(--muted); text-decoration: none; margin-bottom: 28px; }
-  .back .arr { display: inline-block; transition: transform 200ms var(--ease); }
+  /* ── project detail: a calm reading panel over that project's film ── */
+  .detail { padding-top: 96px; }
+  .detail .box { max-width: 760px; margin-inline: auto; background: var(--glass-strong); }
+  @media (min-width: 901px) { .detail:not(.wide) .box { max-width: min(680px, 48vw); margin-inline: 0 auto; } }
+  .back { display: inline-flex; align-items: center; gap: 8px; font: 400 15px var(--font); color: var(--muted); text-decoration: none; margin-bottom: 32px; }
+  .back .arr { transition: transform 250ms var(--spring); }
   .back:hover, .back:focus-visible { color: var(--text); }
-  .back:hover .arr, .back:focus-visible .arr { transform: translateX(-3px); }
-  .detail-meta { font: 400 12.5px var(--mono); color: var(--muted); margin-top: 10px; letter-spacing: 0.02em; }
+  .back:hover .arr { transform: translateX(-3px); }
+  .detail h1 { font-size: clamp(44px, 7vw, 88px); }
+  .detail-meta { font: 600 13px var(--font); color: var(--muted); margin-top: 16px; }
   .detail-meta .tag { color: var(--accent); }
-  .para { margin-top: 18px; color: var(--text); }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
-  .chip { font: 400 12px var(--mono); color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 4px 11px; }
-  .proj-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
-  .pn { margin-top: 40px; border-top: 1px solid var(--border); padding-top: 16px; }
+  .para { margin-top: 20px; color: rgba(245,245,247,.88); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+  .chip { font: 400 13px var(--font); color: rgba(245,245,247,.8); background: rgba(255,255,255,.08); border-radius: var(--r-control); padding: 6px 12px; }
+  .proj-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .pn { margin-top: 48px; border-top: 1px solid var(--hair); padding-top: 16px; }
   .pn .idx { width: 40px; }
+  .pn .row-title { font-size: 20px; }
 
   /* ── me gallery ── */
-  .gallery { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 150px; grid-auto-flow: dense; gap: 14px; margin-top: 26px; }
-  .gcell { position: relative; grid-row: span 2; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: #000; margin: 0; }
+  .gallery { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 160px; grid-auto-flow: dense; gap: 12px; margin-top: 32px; }
+  .gcell { position: relative; grid-row: span 2; border-radius: var(--r-inner); overflow: hidden; margin: 0; background: #111; }
   .gcell.tall { grid-row: span 3; }
-  .gcell img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 600ms var(--ease); }
-  .gcell::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(5,5,5,0.6), transparent 45%); opacity: 0; transition: opacity 300ms var(--ease); }
-  .gcell:hover img { transform: scale(1.04); }
-  .gcell:hover::after { opacity: 1; }
-  .gcell .gcap { position: absolute; left: 12px; bottom: 10px; z-index: 1; font: 400 11.5px var(--mono); color: var(--text); opacity: 0; transform: translateY(4px); transition: opacity 300ms var(--ease), transform 300ms var(--ease); }
+  .gcell .slot { position: absolute; inset: 0; }
+  .gcell .slot > img, .gcell .slot > video { object-fit: cover; transition: transform 800ms var(--spring); }
+  .gcell:hover .slot > img { transform: scale(1.04); }
+  .gcell .gcap { position: absolute; left: 12px; bottom: 12px; z-index: 2; font: 600 13px var(--font); opacity: 0; transform: translateY(4px); transition: opacity 300ms var(--ease), transform 300ms var(--ease); text-shadow: 0 1px 12px rgba(0,0,0,.6); }
   .gcell:hover .gcap, .gcell:focus-within .gcap { opacity: 1; transform: none; }
-  @media (max-width: 720px) { .gallery { grid-auto-rows: 110px; gap: 10px; } }
+  .detail.wide .box { max-width: 1040px; }
 
   /* ── reveal & view transitions ── */
-  .reveal { opacity: 0; transform: translateY(8px); transition: opacity 500ms var(--ease), transform 500ms var(--ease); }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 700ms var(--ease), transform 700ms var(--spring); }
   .reveal.in { opacity: 1; transform: none; }
+  #view.leaving { opacity: 0; transition: opacity 180ms var(--ease); }
+  #view.entering { animation: enter 400ms var(--spring); }
+  @keyframes enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
-  #view.leaving { opacity: 0; transform: translateY(-6px); transition: opacity 150ms var(--ease), transform 150ms var(--ease); }
-  #view.entering { animation: enter 250ms var(--ease); }
-  @keyframes enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .site-foot { max-width: 1120px; margin-inline: auto; padding: 0 24px 48px; font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; gap: 16px; }
 
-  .site-foot {
-    max-width: 680px; margin-inline: auto; padding: 0 24px 48px;
-    font: 400 12px var(--mono); color: var(--muted);
+  /* ── slot mode (?slots) ── */
+  .slots-on [data-slot] { outline: 1px dashed var(--accent); outline-offset: -1px; }
+  .slot-panel { position: fixed; left: 12px; bottom: 12px; z-index: 70; width: min(440px, calc(100vw - 24px)); max-height: 60vh; overflow: auto;
+    background: rgba(17,17,17,.94); backdrop-filter: blur(20px); color: #eee; border: 1px solid var(--hair); border-radius: 16px; padding: 16px; font: 12px/1.5 ui-monospace, Menlo, monospace; }
+  .slot-panel b { color: var(--accent); }
+  .slot-panel .now { margin-top: 8px; padding: 8px; border-radius: 8px; background: rgba(255,255,255,.06); }
+  .slot-panel pre { white-space: pre-wrap; word-break: break-all; margin-top: 8px; color: #ccc; }
+  .slot-panel button { margin-top: 8px; margin-right: 8px; background: var(--text); color: #000; border: 0; border-radius: 999px; padding: 6px 12px; font: 600 12px var(--font); cursor: pointer; }
+  .slot-drop { position: fixed; inset: 0; z-index: 69; display: none; place-items: center; background: rgba(0,0,0,.5); border: 3px dashed var(--accent); font: 600 20px var(--font); }
+  .slot-drop.show { display: grid; }
+
+  @media (max-width: 900px) {
+    .intro { grid-template-columns: 1fr; gap: 24px; }
+    .intro > div:first-child { display: contents; }   /* phone order: name, film, then the panel */
+    .intro h1 { order: 1; font-size: 22vw; margin-bottom: 0; }
+    .film-card { order: 2; width: 100%; max-width: 420px; justify-self: center; }
+    .intro .box { order: 3; }
   }
-
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
-  .row:focus-visible, .btn:focus-visible, .link:focus-visible { outline-offset: 0; }
-
   @media (max-width: 720px) {
-    .box { padding: 26px 22px; }
-    .box + .box { margin-top: 64px; }
-    #view { padding: 64px 0 48px; }
-    h1 { font-size: 26px; }
+    body { font-size: 16px; }
+    .box { padding: 28px 24px; border-radius: 20px; }
+    .scene { min-height: auto; padding-block: 64px; }
+    .scene.intro-scene { min-height: 100svh; padding-top: 24px; }
+    .site-head { padding: 12px 16px; }
+    .site-head nav { gap: 0; }
+    .site-head nav a { padding: 6px 8px; font-size: 13px; }
+    .site-head .brand span:last-child { display: none; }
     .row .row-year { display: none; }
+    .row .row-title { font-size: 20px; }
+    .gallery { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 120px; gap: 8px; }
+    .scroll-cue { display: none; }
   }
-
   @media (max-width: 1020px) { .social-rail, .email-rail { display: none; } }
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .reveal { opacity: 1; transform: none; transition: none; }
     #view.leaving, #view.entering { animation: none; transition: none; opacity: 1; transform: none; }
-    .row .row-arrow, .btn, .skip-link { transition: none; }
-    .row:hover .row-arrow, .row:focus-visible .row-arrow { transform: none; }
-    .btn:hover, .btn:focus-visible { transform: none; }
-    .social-rail a, .email-rail a, .cta { transition: none; }
-    .cta:hover, .cta:focus-visible { transform: none; box-shadow: none; }
-    .social-rail a:hover, .social-rail a:focus-visible,
-    .email-rail a:hover, .email-rail a:focus-visible { transform: none; }
+    #bg .slot, #bg .slot > img, #bg .slot > video { transition: none; transform: none; }
+    .row .row-arrow, .btn, .social-rail a, .email-rail a { transition: none; }
     .box:has(.row:hover) .row:not(:hover) { opacity: 1; }
-    .gcell img, .gcell::after, .gcell .gcap { transition: none; }
-    .gcell:hover img { transform: none; }
   }
 </style>
 </head>
 <body>
-<canvas id="bgCanvas" aria-hidden="true"></canvas>
-<div id="spotlight" aria-hidden="true"></div>
+<div id="bg" aria-hidden="true"></div>
 <a class="skip-link" href="#view">Skip to content</a>
 
-<header class="site-head">
-  <a class="brand" href="#/">Malek Hassan</a>
+<header class="site-head" id="head">
+  <a class="brand" href="#/"><span class="mark" aria-hidden="true"></span><span>Malek Hassan</span></a>
   <nav aria-label="Sections">
-    <a href="#projects">projects</a>
-    <a href="#milestones">milestones</a>
-    <a href="#/me">me</a>
-    <a href="#contact">contact</a>
+    <a href="#projects">Projects</a>
+    <a href="#milestones">Milestones</a>
+    <a href="#/me">Me</a>
+    <a href="#contact">Contact</a>
   </nav>
 </header>
 
-<main id="view" class="col" aria-live="polite"></main>
+<main id="view" aria-live="polite"></main>
 
-<footer class="site-foot">© 2026 Malek Hassan · built by hand, one file</footer>
+<footer class="site-foot"><span>© 2026 Malek Hassan · built by hand, one file</span><span>Berlin</span></footer>
 <aside id="socialRail" class="social-rail" aria-label="Social profiles"></aside>
 <aside id="emailRail" class="email-rail" aria-label="Email"></aside>
 
 <script>
 'use strict';
 
-// ── CONTENT ──
+/* ════════════════════════════════════════════════════════════════════════════
+   MEDIA — every picture and video that plays behind the site, in one place.
+   Swap one by changing its `src` (and `poster` for videos). Nothing else changes.
+   Open the site with ?slots to see which film is on screen right now and to drop
+   a file onto the page to try it there before you commit to it.
+
+   src      image or video (.jpg .png .webp / .mp4 .webm .mov); videos play muted and looped
+   poster   still shown before a video starts, and instead of it with reduced motion
+   fit      'cover' (fill the screen, crop) or 'contain'
+   position focal point when cropping: '50% 30%' keeps the upper middle in frame
+   dim      0–1, extra darkening on top of the standard vignette
+   frame    'right' or 'left': on wide screens, show portrait footage sharp on that half
+            and keep the other half dark for the text (phones always fill the screen)
+   Make a loop from any video:  scripts/make-loop.sh in.mov <start> <seconds> <name>
+   ════════════════════════════════════════════════════════════════════════════ */
+const MEDIA = {
+  // The intro film in the first panel: the tight cut of video 1, 9:16, with sound.
+  'film.intro':    { src: 'assets/film/intro-web.mp4', poster: 'assets/loops/reel-01-intro.jpg', length: '3:28' },
+
+  // Behind each section of the home page, in scroll order. Graded with R2R's looks
+  // (assets/grade: cool = gym/night, warm = daylight/skin, ifa = venue light).
+  'bg.intro':      { src: 'assets/loops/new-court-dunk.mp4', poster: 'assets/loops/new-court-dunk.jpg', fit: 'cover', position: '50% 78%', dim: 0 },
+  'bg.projects':   { src: 'assets/loops/new-gym-drive.mp4', poster: 'assets/loops/new-gym-drive.jpg', fit: 'cover', position: '50% 70%', dim: 0.15 },
+  'bg.milestones': { src: 'assets/loops/present-who.mp4', poster: 'assets/loops/present-who.jpg', fit: 'cover', position: '50% 32%', frame: 'left', dim: 0.1 },
+  'bg.skills':     { src: 'assets/loops/new-tedx-hall.mp4', poster: 'assets/loops/new-tedx-hall.jpg', fit: 'cover', position: '50% 50%', dim: 0.1 },
+  'bg.contact':    { src: 'assets/loops/new-bridge-walk.mp4', poster: 'assets/loops/new-bridge-walk.jpg', fit: 'cover', position: '50% 40%', dim: 0.05, frame: 'left' },
+  'bg.me':         { src: 'assets/me/me-32-night-dunk.jpg', fit: 'cover', position: '50% 30%', dim: 0.2 },
+
+  // Behind a project: shown while its row is hovered, and on its own page.
+  // Me presenting that project (the teleprompter takes) or out in the world.
+  'work.vidbridge':      { src: 'assets/loops/present-how-i-build.mp4', poster: 'assets/loops/present-how-i-build.jpg', fit: 'cover', position: '50% 32%', frame: 'right', dim: 0.1 },
+  'work.mozcode':        { src: 'assets/loops/present-cold-open.mp4', poster: 'assets/loops/present-cold-open.jpg', fit: 'cover', position: '50% 32%', frame: 'right', dim: 0.1 },
+  'work.mccodz':         { src: 'assets/loops/present-how-i-build.mp4', poster: 'assets/loops/present-how-i-build.jpg', fit: 'cover', position: '50% 32%', frame: 'right', dim: 0.1 },
+  'work.followcam':      { src: 'assets/loops/present-followcam.mp4', poster: 'assets/loops/present-followcam.jpg', fit: 'cover', position: '50% 32%', frame: 'right', dim: 0.1 },
+  'work.offerprofi':     { src: 'assets/loops/present-businesses.mp4', poster: 'assets/loops/present-businesses.jpg', fit: 'cover', position: '50% 32%', frame: 'right', dim: 0.1 },
+  'work.contexta':       { src: 'assets/loops/new-event-talk.mp4', poster: 'assets/loops/new-event-talk.jpg', fit: 'cover', position: '50% 35%', dim: 0.05, frame: 'right' },
+  'work.oracle':         { src: 'assets/loops/present-businesses.mp4', poster: 'assets/loops/present-businesses.jpg', fit: 'cover', position: '50% 32%', frame: 'right', dim: 0.1 },
+  'work.second-brain':   { src: 'assets/loops/new-rayneo-laugh.mp4', poster: 'assets/loops/new-rayneo-laugh.jpg', fit: 'cover', position: '50% 45%', dim: 0.1 },
+  'work.finance-wizz':   { src: 'assets/loops/new-run-club.mp4', poster: 'assets/loops/new-run-club.jpg', fit: 'cover', position: '50% 50%', dim: 0.05, frame: 'right' },
+  'work.solana-arb-bot': { src: 'assets/loops/new-bridge-walk.mp4', poster: 'assets/loops/new-bridge-walk.jpg', fit: 'cover', position: '50% 40%', dim: 0.05, frame: 'right' },
+  'work.loon-link':      { src: 'assets/loops/present-doorway.mp4', poster: 'assets/loops/present-doorway.jpg', fit: 'cover', position: '50% 32%', frame: 'right', dim: 0.1 },
+  'work.portfolio':      { src: 'assets/loops/new-kenzo-fit.mp4', poster: 'assets/loops/new-kenzo-fit.jpg', fit: 'cover', position: '50% 40%', dim: 0.05, frame: 'right' },
+  'work.hustlr':         { src: 'assets/loops/new-gym-drive.mp4', poster: 'assets/loops/new-gym-drive.jpg', fit: 'cover', position: '50% 70%', dim: 0.1 }
+};
+
+// ── CONTENT (unchanged from the live site) ──
 const SITE = {
   intro: {
     name: 'Malek Hassan',
@@ -352,6 +369,13 @@ const SITE = {
       "The rest: Cairo to Aachen to Berlin, building things with friends, and a camera roll that fills up about as fast as the git log."
     ],
     gallery: [
+      { src: 'assets/me/me-32-night-dunk.jpg', caption: 'Night run', tall: true },
+      { src: 'assets/me/me-33-did-the-work.jpg', caption: 'Did the work', tall: true },
+      { src: 'assets/me/me-34-gym-orange.jpg', caption: 'Gym', tall: true },
+      { src: 'assets/me/me-35-on-the-floor.jpg', caption: 'On the floor', tall: false },
+      { src: 'assets/me/me-36-hallway.jpg', caption: 'Hallway check', tall: true },
+      { src: 'assets/me/me-37-summerup.jpg', caption: 'SummerUP', tall: false },
+      { src: 'assets/me/me-38-gym-floor.jpg', caption: 'Gym floor', tall: true },
       { src: 'assets/me/me-19-above-the-rim.jpg', caption: 'Above the rim', tall: true },
       { src: 'assets/me/me-01-roots.jpg', caption: 'Giza, where it starts', tall: false },
       { src: 'assets/me/me-20-progress-check.jpg', caption: 'Progress check', tall: true },
@@ -548,7 +572,6 @@ const SITE = {
     cv: 'output/pdf/Malek_Hassan_CV.pdf'
   }
 };
-
 const SOCIAL_ICONS = {
   github: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>`,
   linkedin: `<svg class="fill-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 3.8a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2ZM3.4 9.7H7v10.9H3.4V9.7Zm5.8 0h3.4v1.5h.1c.5-.9 1.7-1.9 3.5-1.9 3.7 0 4.4 2.4 4.4 5.6v5.7H17v-5.1c0-1.2 0-2.8-1.8-2.8s-2 1.3-2 2.7v5.2H9.2V9.7Z"/></svg>`,
@@ -560,18 +583,65 @@ document.getElementById('socialRail').innerHTML = `
   <a href="${SITE.contact.github}" target="_blank" rel="noreferrer" aria-label="GitHub">${SOCIAL_ICONS.github}</a>
   <a href="${SITE.contact.linkedin}" target="_blank" rel="noreferrer" aria-label="LinkedIn">${SOCIAL_ICONS.linkedin}</a>
   <a href="${SITE.contact.instagram}" target="_blank" rel="noreferrer" aria-label="Instagram">${SOCIAL_ICONS.instagram}</a>`;
+document.getElementById('emailRail').innerHTML = `<a href="mailto:${SITE.contact.email}">${SITE.contact.email}</a>`;
 
-document.getElementById('emailRail').innerHTML = `
-  <a href="mailto:${SITE.contact.email}">${SITE.contact.email}</a>`;
-
-// ── RENDERERS ──
+// ── helpers ──
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const SLOTS_MODE = new URLSearchParams(location.search).has('slots');
+const tried = {};   // slot mode: files dropped this session, by slot key
 function esc(s) {
-  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+const isVideo = src => /\.(mp4|webm|mov|m4v)(\?|$)/i.test(src || '') || /^blob:.*#video$/.test(src || '');
+
+// One renderer for every slot, so swapping a file never touches layout.
+function slotInner(spec) {
+  const style = `object-fit:${spec.fit || 'cover'};object-position:${spec.position || '50% 50%'}`;
+  if (isVideo(spec.src) && !(REDUCED && spec.poster)) {
+    return `<video muted playsinline loop preload="metadata" poster="${esc(spec.poster || '')}" src="${esc(spec.src)}" style="${style}"></video>`;
+  }
+  return `<img src="${esc(isVideo(spec.src) ? spec.poster : spec.src)}" alt="" style="${style}">`;
+}
+function slotHTML(key, spec, cls = '') {
+  return `<div class="slot ${cls}${spec.frame ? ' frame-' + spec.frame : ''}" data-slot="${esc(key)}" style="--dim-amt:${spec.dim || 0}">${slotInner(spec)}</div>`;
 }
 
+// ── STAGE: the full-screen film; one slot on at a time, crossfaded ──
+const bg = document.getElementById('bg');
+let bgKey = null, bgSection = null, bgHover = null;
+function setBg(key) {
+  if (!MEDIA[key] || key === bgKey) return;
+  bgKey = key;
+  let el = bg.querySelector(`[data-slot="${CSS.escape(key)}"]`);
+  if (!el) { bg.insertAdjacentHTML('beforeend', slotHTML(key, MEDIA[key])); el = bg.lastElementChild; }
+  bg.querySelectorAll('.slot').forEach(s => {
+    const on = s === el;
+    const v = s.querySelector('video');
+    if (on) { requestAnimationFrame(() => s.classList.add('on')); v?.play().catch(() => {}); }
+    else { s.classList.remove('on'); if (v) setTimeout(() => { if (!s.classList.contains('on')) v.pause(); }, 900); }
+  });
+  if (SLOTS_MODE) slotPanel();
+}
+const showBg = () => setBg(bgHover || bgSection);
+
+// Sections declare their film with data-bg; whichever fills most of the screen wins.
+let sectionIO = null;
+function watchSections(root) {
+  sectionIO?.disconnect();
+  const seen = new Map();
+  sectionIO = new IntersectionObserver(entries => {
+    entries.forEach(e => seen.set(e.target, e.intersectionRatio));
+    let best = null, ratio = 0;
+    seen.forEach((r, el) => { if (r > ratio) { ratio = r; best = el; } });
+    if (best) { bgSection = best.dataset.bg; showBg(); }
+  }, { threshold: [0, .15, .3, .5, .7, .9] });
+  root.querySelectorAll('[data-bg]').forEach(s => sectionIO.observe(s));
+}
+
+// ── RENDERERS (same structure as the live site) ──
 function mediaFigure(md) {
   const cls = md.portrait ? 'media portrait' : 'media';
-  const body = /\.(mp4|mov|webm)$/i.test(md.src)
+  const body = isVideo(md.src)
     ? `<video controls preload="none" playsinline poster="${esc(md.poster || '')}" src="${esc(md.src)}"></video>`
     : `<img loading="lazy" src="${esc(md.src)}" alt="${esc(md.caption || '')}">`;
   return `<figure class="${cls}">${body}${md.caption ? `<figcaption>${esc(md.caption)}</figcaption>` : ''}</figure>`;
@@ -579,7 +649,7 @@ function mediaFigure(md) {
 
 function renderHome() {
   const p = SITE.projects.map((pr, i) => `
-    <a class="row" href="#/${pr.slug}">
+    <a class="row" href="#/${pr.slug}" data-work="${pr.slug}">
       <span class="idx">${String(i + 1).padStart(2, '0')}</span>
       <span class="row-body">
         <span class="row-title">${esc(pr.title)}</span>
@@ -601,63 +671,97 @@ function renderHome() {
   const film = SITE.milestones[0].media;
   const sk = SITE.skills.map(g => `
     <p class="skill-line"><span class="area">${esc(g.area)}</span>${g.items.map(esc).join(' · ')}</p>`).join('');
+  const c = SITE.contact, intro = MEDIA['film.intro'];
 
-  const c = SITE.contact;
   return `
-  <section class="box reveal" id="intro" aria-label="Introduction">
-    <h1>${esc(SITE.intro.name)}</h1>
-    <p class="role">${esc(SITE.intro.role)}</p>
-    <p class="log">${esc(SITE.intro.log)}</p>
-    <p class="bio">${esc(SITE.intro.bio)}</p>
-    <div class="intro-links">
-      <a class="link" href="${esc(c.github)}" target="_blank" rel="noreferrer">github</a>
-      <a class="link" href="${esc(c.linkedin)}" target="_blank" rel="noreferrer">linkedin</a>
-      <a class="link" href="${esc(c.instagram)}" target="_blank" rel="noreferrer">instagram</a>
-      <a class="link" href="mailto:${esc(c.email)}">email</a>
-      <a class="link" href="${esc(c.cv)}">cv.pdf</a>
+  <section class="scene intro-scene col" id="intro" aria-label="Introduction" data-bg="bg.intro">
+    <div class="intro">
+      <div>
+        <h1 class="reveal">Malek<br>Hassan</h1>
+        <div class="box reveal">
+          <p class="role">${esc(SITE.intro.role)}</p>
+          <p class="log">${esc(SITE.intro.log)}</p>
+          <p class="bio">${esc(SITE.intro.bio)}</p>
+          <div class="intro-links">
+            <a class="link" href="${esc(c.github)}" target="_blank" rel="noreferrer">GitHub</a>
+            <a class="link" href="${esc(c.linkedin)}" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a class="link" href="${esc(c.instagram)}" target="_blank" rel="noreferrer">Instagram</a>
+            <a class="link" href="mailto:${esc(c.email)}">Email</a>
+            <a class="link" href="${esc(c.cv)}">CV.pdf</a>
+          </div>
+        </div>
+      </div>
+      <div class="film-card reveal" id="introFilm" data-slot="film.intro">
+        <video playsinline preload="metadata" poster="${esc(intro.poster)}" src="${esc(intro.src)}"></video>
+        <button class="btn play" type="button"><span class="tri" aria-hidden="true"></span>Watch the intro · ${esc(intro.length || '')}</button>
+      </div>
+    </div>
+    <span class="scroll-cue" aria-hidden="true">Scroll</span>
+  </section>
+
+  <section class="scene col" id="projects" aria-label="Projects" data-bg="bg.projects">
+    <div class="box rows-box reveal">
+      <span class="eyebrow"><span class="tilde">~/</span>projects</span>
+      ${p}
     </div>
   </section>
 
-  <section class="box reveal" id="projects" aria-label="Projects">
-    <span class="eyebrow"><span class="tilde">~/</span>projects</span>
-    ${p}
+  <section class="scene right col" id="milestones" aria-label="Milestones" data-bg="bg.milestones">
+    <div class="box reveal">
+      <span class="eyebrow"><span class="tilde">~/</span>milestones</span>
+      ${mediaFigure(film)}
+      <div style="margin-top:24px">${m}</div>
+    </div>
   </section>
 
-  <section class="box reveal" id="milestones" aria-label="Milestones">
-    <span class="eyebrow"><span class="tilde">~/</span>milestones</span>
-    ${mediaFigure(film)}
-    <div style="margin-top:26px">${m}</div>
+  <section class="scene col" id="skills" aria-label="Skills" data-bg="bg.skills">
+    <div class="box reveal">
+      <span class="eyebrow"><span class="tilde">~/</span>skills</span>
+      ${sk}
+    </div>
   </section>
 
-  <section class="box reveal" id="skills" aria-label="Skills">
-    <span class="eyebrow"><span class="tilde">~/</span>skills</span>
-    ${sk}
-  </section>
-
-  <section class="box reveal" id="contact" aria-label="Contact">
-    <span class="eyebrow"><span class="tilde">~/</span>contact</span>
-    <a class="contact-email link" href="mailto:${esc(c.email)}">${esc(c.email)}</a>
-    <div class="contact-links">
-      <a class="btn btn-icon" href="${esc(c.github)}" target="_blank" rel="noreferrer">${SOCIAL_ICONS.github}<span>GitHub</span></a>
-      <a class="btn btn-icon" href="${esc(c.linkedin)}" target="_blank" rel="noreferrer">${SOCIAL_ICONS.linkedin}<span>LinkedIn</span></a>
-      <a class="btn btn-icon" href="${esc(c.instagram)}" target="_blank" rel="noreferrer">${SOCIAL_ICONS.instagram}<span>Instagram</span></a>
-      <a class="btn btn-icon" href="${esc(c.cv)}">${SOCIAL_ICONS.download}<span>Download CV</span></a>
+  <section class="scene right col" id="contact" aria-label="Contact" data-bg="bg.contact">
+    <div class="box reveal">
+      <span class="eyebrow"><span class="tilde">~/</span>contact</span>
+      <a class="contact-email link" href="mailto:${esc(c.email)}">${esc(c.email)}</a>
+      <div class="contact-links">
+        <a class="btn" href="${esc(c.github)}" target="_blank" rel="noreferrer">${SOCIAL_ICONS.github}<span>GitHub</span></a>
+        <a class="btn" href="${esc(c.linkedin)}" target="_blank" rel="noreferrer">${SOCIAL_ICONS.linkedin}<span>LinkedIn</span></a>
+        <a class="btn" href="${esc(c.instagram)}" target="_blank" rel="noreferrer">${SOCIAL_ICONS.instagram}<span>Instagram</span></a>
+        <a class="btn primary" href="${esc(c.cv)}">${SOCIAL_ICONS.download}<span>Download CV</span></a>
+      </div>
     </div>
   </section>`;
 }
 
-function mountHome() {
+function mountReveal() {
   const boxes = document.querySelectorAll('.reveal');
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    boxes.forEach(b => b.classList.add('in'));
-    return;
-  }
+  if (REDUCED) { boxes.forEach(b => b.classList.add('in')); return; }
   const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-    });
-  }, { threshold: 0.15 });
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
   boxes.forEach(b => io.observe(b));
+}
+
+function mountHome() {
+  mountReveal();
+  watchSections(view);
+  // hovering (or focusing) a project row swaps the film to that project
+  document.querySelectorAll('[data-work]').forEach(a => {
+    const on = () => { bgHover = 'work.' + a.dataset.work; showBg(); };
+    a.addEventListener('mouseenter', on);
+    a.addEventListener('focus', on);
+  });
+  const rows = document.querySelector('.rows-box');
+  const off = () => { bgHover = null; showBg(); };
+  rows.addEventListener('mouseleave', off);
+  rows.addEventListener('focusout', e => { if (!rows.contains(e.relatedTarget)) off(); });
+  // the intro film plays inline with sound; the button disappears while it plays
+  const card = document.getElementById('introFilm'), v = card.querySelector('video');
+  card.querySelector('.play').addEventListener('click', () => { v.controls = true; v.muted = false; v.play(); });
+  v.addEventListener('play', () => card.classList.add('playing'));
+  v.addEventListener('pause', () => { if (v.currentTime < 0.2 || v.ended) card.classList.remove('playing'); });
 }
 
 function renderProject(i) {
@@ -665,17 +769,16 @@ function renderProject(i) {
   const n = SITE.projects.length;
   const prev = SITE.projects[(i - 1 + n) % n];
   const next = SITE.projects[(i + 1) % n];
-
   const paras = pr.paragraphs.map(p => `<p class="para">${esc(p)}</p>`).join('');
   const media = pr.media.map(mediaFigure).join('');
   const chips = `<div class="chips">${pr.stack.map(s => `<span class="chip">${esc(s)}</span>`).join('')}</div>`;
   const links = (pr.github || pr.demo) ? `
     <div class="proj-links">
       ${pr.github ? `<a class="btn" href="${esc(pr.github)}">GitHub</a>` : ''}
-      ${pr.demo ? `<a class="btn" href="${esc(pr.demo)}">Live demo</a>` : ''}
+      ${pr.demo ? `<a class="btn primary" href="${esc(pr.demo)}">Live demo</a>` : ''}
     </div>` : '';
-
   return `
+  <div class="detail col">
   <article class="box" aria-label="${esc(pr.title)}">
     <a class="back" href="#/"><span class="arr" aria-hidden="true">←</span> Index</a>
     <h1>${esc(pr.title)}</h1>
@@ -696,31 +799,33 @@ function renderProject(i) {
         <span class="row-arrow" aria-hidden="true">→</span>
       </a>
     </nav>
-  </article>`;
+  </article>
+  </div>`;
 }
 
 function renderMe() {
   const paras = SITE.me.paragraphs.map(p => `<p class="para">${esc(p)}</p>`).join('');
   const g = SITE.me.gallery.map((ph, i) => `
     <figure class="gcell${ph.tall ? ' tall' : ''} reveal" style="transition-delay:${(i % 6) * 60}ms">
-      <img loading="lazy" src="${esc(ph.src)}" alt="${esc(ph.caption)}">
+      ${slotHTML(`SITE.me.gallery[${i}]`, { src: ph.src, fit: 'cover', position: ph.position || '50% 40%' })}
       <figcaption class="gcap">${esc(ph.caption)}</figcaption>
     </figure>`).join('');
   return `
+  <div class="detail wide col">
   <article class="box" aria-label="Me">
     <a class="back" href="#/"><span class="arr" aria-hidden="true">←</span> Index</a>
     <span class="eyebrow"><span class="tilde">~/</span>me</span>
     <h1>${esc(SITE.me.title)}</h1>
     ${paras}
     <div class="gallery">${g}</div>
-  </article>`;
+  </article>
+  </div>`;
 }
 
-// ── ROUTER ──
+// ── ROUTER (as on the live site) ──
 const view = document.getElementById('view');
-const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let homeScrollY = 0;
-let currentKind = null; // 'home' | 'project'
+let currentKind = null; // 'home' | 'project' | 'me'
 
 function routeTarget() {
   const raw = location.hash;
@@ -735,7 +840,6 @@ function routeTarget() {
 
 function applyRoute() {
   const t = routeTarget();
-
   if (t.kind === 'invalid') { location.replace('#/'); return; }
 
   if (t.kind === 'anchor') {
@@ -745,12 +849,15 @@ function applyRoute() {
     currentKind = 'home';
     document.title = 'Malek Hassan';
     requestAnimationFrame(() => document.getElementById(t.id)?.scrollIntoView());
+    if (SLOTS_MODE) slotPanel();
     return;
   }
 
   if (currentKind === 'home' && (t.kind === 'project' || t.kind === 'me')) homeScrollY = scrollY;
 
   const swap = () => {
+    bgHover = null;
+    sectionIO?.disconnect();
     if (t.kind === 'home') {
       view.innerHTML = renderHome();
       mountHome();
@@ -760,184 +867,84 @@ function applyRoute() {
       currentKind = 'home';
     } else if (t.kind === 'me') {
       view.innerHTML = renderMe();
-      mountHome(); // wires .reveal observers (respects reduced motion)
+      mountReveal();
+      bgSection = 'bg.me'; showBg();
       document.title = 'Malek Hassan — Me';
       requestAnimationFrame(() => scrollTo({ top: 0, left: 0, behavior: 'instant' }));
       currentKind = 'me';
     } else {
       view.innerHTML = renderProject(t.i);
+      bgSection = 'work.' + SITE.projects[t.i].slug; showBg();
       document.title = 'Malek Hassan — ' + SITE.projects[t.i].title;
       requestAnimationFrame(() => scrollTo({ top: 0, left: 0, behavior: 'instant' }));
       currentKind = 'project';
     }
+    if (SLOTS_MODE) slotPanel();
   };
 
   document.querySelectorAll('.site-head nav a').forEach(a => {
     const me = a.getAttribute('href') === '#/me';
-    a.toggleAttribute('aria-current', me ? t.kind === 'me' : t.kind === 'home');
+    a.toggleAttribute('aria-current', me ? t.kind === 'me' : false);
   });
 
   if (REDUCED || currentKind === null) { swap(); return; }
-
   view.classList.add('leaving');
   setTimeout(() => {
     view.classList.remove('leaving');
     swap();
     view.classList.add('entering');
-    setTimeout(() => view.classList.remove('entering'), 300);
-  }, 150);
+    setTimeout(() => view.classList.remove('entering'), 400);
+  }, 180);
 }
 
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 addEventListener('hashchange', applyRoute);
 applyRoute();
 
-// ── EDGE-CONSTRAINED WEAVE (WebGL) ──
-(function initBackground() {
-  const canvas = document.getElementById('bgCanvas');
-  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-  if (!gl) { document.documentElement.classList.add('no-gl'); return; }
-
-  const vs = `attribute vec4 aPos; void main(){ gl_Position = aPos; }`;
-
-  const fs = `
-    precision highp float;
-    uniform vec2 u_res;
-    uniform float u_time;
-    uniform float u_band;
-    uniform vec3 u_accent;
-
-    vec3 mod289v3(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
-    vec2 mod289v2(vec2 x){return x-floor(x*(1.0/289.0))*289.0;}
-    vec3 permute(vec3 x){return mod289v3(((x*34.0)+1.0)*x);}
-
-    float snoise(vec2 v){
-      const vec4 C=vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);
-      vec2 i=floor(v+dot(v,C.yy));
-      vec2 x0=v-i+dot(i,C.xx);
-      vec2 i1=(x0.x>x0.y)?vec2(1.0,0.0):vec2(0.0,1.0);
-      vec4 x12=x0.xyxy+C.xxzz;
-      x12.xy-=i1;
-      i=mod289v2(i);
-      vec3 p=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));
-      vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0);
-      m=m*m; m=m*m;
-      vec3 x2=2.0*fract(p*C.www)-1.0;
-      vec3 h=abs(x2)-0.5;
-      vec3 ox=floor(x2+0.5);
-      vec3 a0=x2-ox;
-      m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);
-      vec3 g;
-      g.x=a0.x*x0.x+h.x*x0.y;
-      g.yz=a0.yz*x12.xz+h.yz*x12.yw;
-      return 130.0*dot(m,g);
-    }
-
-    void main(){
-      vec2 st = gl_FragCoord.xy / u_res;
-      st = st * 2.0 - 1.0;
-      st.x *= u_res.x / u_res.y;
-      float t = u_time * 0.12;
-
-      float n1 = snoise(st * 1.5 + vec2(t, t * 0.5));
-      float n2 = snoise(st * 2.5 - vec2(t * 0.8, -t * 0.3));
-      vec2 warp = st + vec2(n1, n2) * 0.5;
-      float dist = length(warp);
-      float field = sin(dist * 20.0 - t * 5.0) + snoise(warp * 4.0) * 1.5;
-      float bands = fract(field * 2.0);
-      float lt = 0.15;
-      float lines = smoothstep(lt, lt + 0.05, bands) * smoothstep(1.0 - lt, 1.0 - lt - 0.05, bands);
-
-      float edgeDist = min(min(gl_FragCoord.x, u_res.x - gl_FragCoord.x),
-                           min(gl_FragCoord.y, u_res.y - gl_FragCoord.y));
-      float edgeFactor = pow(1.0 - smoothstep(0.0, u_band, edgeDist), 1.8);
-      lines *= edgeFactor * 0.8;
-
-      float grain = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
-
-      vec3 bg   = vec3(0.0196, 0.0196, 0.0196);
-      vec3 vein = vec3(0.13, 0.13, 0.13);
-      float shimmer = 0.35 + 0.65 * snoise(warp * 2.0 + t * 0.3);
-      vec3 veinCol = mix(vein, u_accent * 0.75, clamp(edgeFactor * shimmer, 0.0, 0.38));
-      vec3 col = mix(bg, veinCol, lines);
-      col -= grain * 0.015;
-
-      gl_FragColor = vec4(col, 1.0);
-    }
-  `;
-
-  function compileShader(type, src) {
-    const s = gl.createShader(type);
-    gl.shaderSource(s, src); gl.compileShader(s);
-    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { gl.deleteShader(s); return null; }
-    return s;
-  }
-
-  const vsObj = compileShader(gl.VERTEX_SHADER, vs);
-  const fsObj = compileShader(gl.FRAGMENT_SHADER, fs);
-  if (!vsObj || !fsObj) { document.documentElement.classList.add('no-gl'); return; }
-
-  const prog = gl.createProgram();
-  gl.attachShader(prog, vsObj);
-  gl.attachShader(prog, fsObj);
-  gl.linkProgram(prog); gl.useProgram(prog);
-
-  const buf = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,1, 1,1, -1,-1, 1,-1]), gl.STATIC_DRAW);
-  const aPos = gl.getAttribLocation(prog, 'aPos');
-  gl.enableVertexAttribArray(aPos);
-  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
-
-  const uRes    = gl.getUniformLocation(prog, 'u_res');
-  const uTime   = gl.getUniformLocation(prog, 'u_time');
-  const uBand   = gl.getUniformLocation(prog, 'u_band');
-  const uAccent = gl.getUniformLocation(prog, 'u_accent');
-
-  const accentHex = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-  const accent = [1, 3, 5].map(i => parseInt(accentHex.slice(i, i + 2), 16) / 255);
-  gl.uniform3f(uAccent, accent[0], accent[1], accent[2]);
-
-  function resize() {
-    const dpr = window.devicePixelRatio || 1;
-    const w = Math.floor(window.innerWidth * dpr), h = Math.floor(window.innerHeight * dpr);
-    if (canvas.width !== w || canvas.height !== h) {
-      canvas.width = w; canvas.height = h;
-      gl.viewport(0, 0, w, h);
-      const band = (window.innerWidth < 720 ? 90 : 180) * dpr;
-      gl.uniform1f(uBand, band);
-    }
-  }
-
-  function render(ms) {
-    resize();
-    gl.uniform2f(uRes, canvas.width, canvas.height);
-    gl.uniform1f(uTime, ms * 0.001);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    requestAnimationFrame(render);
-  }
-
-  requestAnimationFrame(render);
+// ── HEADER: clear over the film, frosted once you scroll ──
+(() => {
+  const head = document.getElementById('head');
+  const set = () => head.classList.toggle('frost', scrollY > 24);
+  addEventListener('scroll', set, { passive: true }); set();
 })();
 
-// ── CURSOR SPOTLIGHT ──
-(function initSpotlight() {
-  const el = document.getElementById('spotlight');
-  if (!el || matchMedia('(hover: none)').matches) return;
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let tx = innerWidth / 2, ty = innerHeight * 0.3, x = tx, y = ty;
-
-  addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; }, { passive: true });
-
-  function frame() {
-    if (reduced) { x = tx; y = ty; }
-    else { x += (tx - x) * 0.12; y += (ty - y) * 0.12; }
-    el.style.setProperty('--mx', x + 'px');
-    el.style.setProperty('--my', y + 'px');
-    requestAnimationFrame(frame);
+// ── SLOT MODE (?slots): name the film on screen, drop a file to try it in place ──
+function slotPanel() {
+  document.documentElement.classList.add('slots-on');
+  let p = document.querySelector('.slot-panel');
+  if (!p) {
+    p = document.createElement('div'); p.className = 'slot-panel'; document.body.append(p);
+    const veil = document.createElement('div'); veil.className = 'slot-drop'; veil.textContent = 'Drop to try it behind the page'; document.body.append(veil);
+    addEventListener('dragover', e => { e.preventDefault(); veil.classList.add('show'); });
+    addEventListener('dragleave', e => { if (!e.relatedTarget) veil.classList.remove('show'); });
+    addEventListener('drop', e => {
+      e.preventDefault(); veil.classList.remove('show');
+      const f = e.dataTransfer.files[0]; if (!f) return;
+      const slotEl = e.target.closest?.('[data-slot]:not(#bg *)');
+      const key = slotEl?.dataset.slot || bgKey;
+      const url = URL.createObjectURL(f) + (f.type.startsWith('video') ? '#video' : '');
+      tried[key] = f.name;
+      if (MEDIA[key]) {
+        MEDIA[key] = { ...MEDIA[key], src: url, poster: '' };
+        bg.querySelector(`[data-slot="${CSS.escape(key)}"]`)?.remove();
+        if (key === 'film.intro') { const v = document.querySelector('#introFilm video'); if (v) v.src = url; }
+        bgKey = null; showBg();
+      } else if (slotEl) {
+        slotEl.innerHTML = slotInner({ src: url, fit: 'cover' });
+        slotEl.querySelector('video')?.play().catch(() => {});
+      }
+      slotPanel();
+    });
   }
-  requestAnimationFrame(frame);
-})();
+  const edits = Object.keys(tried).map(k => k.startsWith('SITE.')
+    ? `${k}.src = 'assets/me/${tried[k]}'`
+    : `MEDIA['${k}'].src = 'assets/loops/${tried[k]}'`).join('\n');
+  p.innerHTML = `<b>Slot mode</b> · nothing is saved
+    <div class="now">Behind the page now: <b>${esc(bgKey || '—')}</b><br>${esc(MEDIA[bgKey]?.src || '')}</div>
+    <div style="margin-top:8px">Scroll or hover a project to change it. Drop an image or video anywhere to try it in that slot. Gallery photos and the intro film are dashed; drop onto one to try it there.</div>
+    ${edits ? `<pre>${esc(edits)}</pre><button type="button" id="slotCopy">Copy edits</button>` : ''}`;
+  document.getElementById('slotCopy')?.addEventListener('click', () => navigator.clipboard?.writeText(edits));
+}
 </script>
 </body>
 </html>
