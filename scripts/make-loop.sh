@@ -14,7 +14,7 @@ GRADE=""
 if [[ "$(ffprobe -v error -select_streams v:0 -show_entries stream=color_transfer -of csv=p=0 "$IN")" == arib-std-b67 ]]; then
   GRADE="format=gbrp,lut3d=file=${0:A:h:h}/assets/grade/hlg2709.cube,"
 fi
-[[ -n "${LUT:-}" ]] && GRADE="${GRADE}format=gbrp,lut3d=file=${LUT:A},"
+for l in ${(s.:.)${LUT:-}}; do GRADE="${GRADE}format=gbrp,lut3d=file=${l:A},"; done   # LUT=a.cube:b.cube stacks looks in order
 SETP="setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709:range=tv"
 case "$CROP" in
   portrait) BASE="crop='min(iw,ih*9/16)':'min(ih,iw*16/9)'," ;;
