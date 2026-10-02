@@ -188,7 +188,9 @@
   .skill-line { padding: 12px 0; font-size: 16px; color: rgba(245,245,247,.8); border-top: 1px solid var(--hair); }
   .skill-line:first-of-type { border-top: 0; }
   .skill-line .area { display: block; font: 600 12px var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
-  .contact-email { display: inline-block; font: 800 clamp(28px, 4.4vw, 56px)/1.05 var(--display); letter-spacing: -0.03em; text-transform: uppercase; word-break: break-word; }
+  /* the address is one line at any width: it scales with its panel instead of wrapping */
+  #contact .box { container-type: inline-size; width: 100%; }
+  .contact-email { display: inline-block; white-space: nowrap; font: 800 clamp(14px, 6.4cqi, 52px)/1.05 var(--display); letter-spacing: -0.03em; text-transform: uppercase; }
   .contact-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 
   /* ── framing rails (kept from the old site) ── */
