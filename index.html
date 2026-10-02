@@ -179,12 +179,7 @@
   .media.portrait video, .media.portrait img { max-height: 600px; width: auto; max-width: 100%; margin-inline: auto; object-fit: contain; }
   .media figcaption { font-size: 13px; color: var(--muted); margin-top: 12px; }
 
-  /* ── milestones, skills, contact ── */
-  .mrow { display: flex; gap: 20px; align-items: baseline; padding: 16px 0; border-top: 1px solid var(--hair); }
-  .mrow:first-of-type { border-top: 0; }
-  .mrow .mdate { font: 600 13px var(--font); color: var(--muted); flex: none; width: 72px; font-variant-numeric: tabular-nums; }
-  .mrow .mtitle { display: block; font: 600 16px/1.35 var(--font); letter-spacing: -0.015em; }
-  .mrow .msub { display: block; font-size: 15px; color: var(--muted); margin-top: 2px; }
+  /* ── skills, contact ── */
   .skill-line { padding: 12px 0; font-size: 16px; color: rgba(245,245,247,.8); border-top: 1px solid var(--hair); }
   .skill-line:first-of-type { border-top: 0; }
   .skill-line .area { display: block; font: 600 12px var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
@@ -295,7 +290,6 @@
   <a class="brand" href="#/"><span class="mark" aria-hidden="true"></span><span>Malek Hassan</span></a>
   <nav aria-label="Sections">
     <a href="#projects">Projects</a>
-    <a href="#milestones">Milestones</a>
     <a href="#/me">Me</a>
     <a href="#contact">Contact</a>
   </nav>
@@ -333,7 +327,6 @@ const MEDIA = {
   // (assets/grade: cool = gym/night, warm = daylight/skin, ifa = venue light).
   'bg.intro':      { src: 'assets/loops/new-court-dunk.mp4', srcSm: 'assets/loops/new-court-dunk-sm.mp4', poster: 'assets/loops/new-court-dunk.jpg', fit: 'cover', position: '50% 78%', dim: 0 },
   'bg.projects':   { src: 'assets/loops/new-gym-drive.mp4', srcSm: 'assets/loops/new-gym-drive-sm.mp4', poster: 'assets/loops/new-gym-drive.jpg', fit: 'cover', position: '50% 70%', dim: 0.15 },
-  'bg.milestones': { src: 'assets/loops/present-who.mp4', srcSm: 'assets/loops/present-who-sm.mp4', poster: 'assets/loops/present-who.jpg', fit: 'cover', position: '50% 32%', frame: 'left', dim: 0.1 },
   'bg.skills':     { src: 'assets/loops/new-tedx-hall.mp4', srcSm: 'assets/loops/new-tedx-hall-sm.mp4', poster: 'assets/loops/new-tedx-hall.jpg', fit: 'cover', position: '50% 50%', dim: 0.1 },
   'bg.contact':    { src: 'assets/loops/new-bridge-walk.mp4', srcSm: 'assets/loops/new-bridge-walk-sm.mp4', poster: 'assets/loops/new-bridge-walk.jpg', fit: 'cover', position: '50% 40%', dim: 0.05, frame: 'left' },
   'bg.me':         { src: 'assets/me/me-32-night-dunk.jpg', fit: 'cover', position: '50% 30%', dim: 0.2 },
@@ -545,20 +538,6 @@ const SITE = {
         { src: 'assets/demos/testimonials/hustlr-testimonial.mp4', caption: 'A day in the app — the score moves as you log progress', poster: 'assets/demos/testimonials/hustlr-testimonial.png', portrait: true }
       ] }
   ],
-  milestones: [
-    { date: '2026-08', title: 'The Commit Log — six months, one camera roll',
-      oneLiner: 'Every frame taken within hours of a real commit; cut, captioned, and voiced by an agentic pipeline.',
-      media: { src: 'assets/demos/commit-log-journey.mp4', caption: 'Six months of shipping, narrated commit by commit', poster: 'assets/demos/commit-log-journey.jpg' } },
-    { date: '2026-08', title: 'First place — CODE Hackathon Berlin', oneLiner: 'FollowCam: a €20 robot cameraman, built and pitched in a weekend as a two-person team.' },
-    { date: '2026-08', title: 'Top 10 of 72 — SummerUP Berlin', oneLiner: 'Offerprofi closed the event week with a signed letter of intent from a real agency.' },
-    { date: '2026-08', title: 'Moved to Berlin — CODE University', oneLiner: 'Final year of the degree in a project-based, ship-real-software curriculum, after two years at RWTH Aachen.' },
-    { date: '2026-07', title: 'MOZCODE open-sourced', oneLiner: '2.18M input tokens avoided across 16 projects — 80% average payload reduction, measured.' },
-    { date: '2026-04', title: 'ORACLE shipped end to end', oneLiner: 'Voice-first claims adjudication — average claim handled in 2:44.' },
-    { date: '2026', title: 'Anthropic certificate — Advanced MCP topics', oneLiner: 'MCP from first principles to advanced topics, applied across all agentic work since.' },
-    { date: '2025', title: 'finance-wizz shipped', oneLiner: 'Document-grounded AI financial analysis, traced back to the source figures.' },
-    { date: '2025', title: 'Second Brain shipped', oneLiner: 'Capture, vault, and cited retrieval as one loop — later extended with a native iOS capture app.' },
-    { date: '2025', title: 'HUSTLR shipped', oneLiner: 'A native iOS momentum app: four pillars, one daily score.' }
-  ],
   skills: [
     { area: 'AI', items: ['Anthropic Claude API', 'Model Context Protocol', 'RAG', 'LangChain / LlamaIndex', 'ChromaDB', 'Tree-sitter', 'Prompt Engineering'] },
     { area: 'Frontend', items: ['TypeScript', 'React 19', 'Next.js 16', 'Vite', 'Vue 3', 'Tailwind CSS', 'D3.js', 'Recharts', 'Framer Motion', 'TanStack Query', 'Zustand'] },
@@ -677,16 +656,7 @@ function renderHome() {
       <span class="row-arrow" aria-hidden="true">→</span>
     </a>`).join('');
 
-  const m = SITE.milestones.map(ms => `
-    <div class="mrow">
-      <span class="mdate">${esc(ms.date)}</span>
-      <span class="row-body">
-        <span class="mtitle">${esc(ms.title)}</span>
-        <span class="msub">${esc(ms.oneLiner)}</span>
-      </span>
-    </div>`).join('');
 
-  const film = SITE.milestones[0].media;
   const sk = SITE.skills.map(g => `
     <p class="skill-line"><span class="area">${esc(g.area)}</span>${g.items.map(esc).join(' · ')}</p>`).join('');
   const c = SITE.contact, intro = MEDIA['film.intro'];
@@ -724,13 +694,6 @@ function renderHome() {
     </div>
   </section>
 
-  <section class="scene right col" id="milestones" aria-label="Milestones" data-bg="bg.milestones">
-    <div class="box reveal">
-      <span class="eyebrow"><span class="tilde">~/</span>milestones</span>
-      ${mediaFigure(film)}
-      <div style="margin-top:24px">${m}</div>
-    </div>
-  </section>
 
   <section class="scene col" id="skills" aria-label="Skills" data-bg="bg.skills">
     <div class="box reveal">
