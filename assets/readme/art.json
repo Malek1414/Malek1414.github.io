@@ -1,0 +1,116 @@
+{
+  "_generator": "https://github.com/Malek1414/Malek1414/blob/main/tools/readme_art.py",
+  "title": "malek1414.github.io",
+  "tagline": "AI systems engineer in Berlin. My site, projects and CV.",
+  "chips": [
+    "single index.html",
+    "hash router",
+    "*video loops",
+    "no build step"
+  ],
+  "footer_left": "Malek Hassan · Berlin · 2026",
+  "footer_right": "HTML · CSS · vanilla JS · GitHub Pages",
+  "alt": "malek1414.github.io: a smiling pixel basketball dribbling under a hoop with an M on the backboard",
+  "accent": "hot",
+  "colors": {
+    "hot": [
+      "#ff6a2b",
+      "#e0480b"
+    ],
+    "ball": [
+      "#e07b2e",
+      "#b85614"
+    ],
+    "edge": [
+      "#c9d1d9",
+      "#57606a"
+    ],
+    "board": [
+      "#21262d",
+      "#f6f8fa"
+    ],
+    "net": [
+      "#f0f3f6",
+      "#8c959f"
+    ],
+    "ink": [
+      "#0d1117",
+      "#1f2328"
+    ],
+    "seam": [
+      "#8a3d0f",
+      "#6e2c06"
+    ]
+  },
+  "legend": {
+    "W": [
+      "edge",
+      "hoop"
+    ],
+    "w": [
+      "board",
+      "hoop"
+    ],
+    "M": [
+      "hot",
+      "hoop"
+    ],
+    "R": [
+      "hot",
+      "hoop"
+    ],
+    "N": [
+      "net",
+      "net"
+    ],
+    "O": [
+      "ball",
+      "ball"
+    ],
+    "S": [
+      "seam",
+      "ball"
+    ],
+    "E": [
+      "ink",
+      "ball"
+    ],
+    "m": [
+      "ink",
+      "ball"
+    ]
+  },
+  "motions": {
+    "ball": "bounce",
+    "net": "rock"
+  },
+  "origins": {
+    "net": "50% 0%"
+  },
+  "sprite": [
+    "..............WWWWWWWWWWWWWWWW",
+    "..............WwwwwwwwwwwwwwwW",
+    "..............WwwwwMwwwMwwwwwW",
+    "..............WwwwwMMwMMwwwwwW",
+    "..............WwwwwMwMwMwwwwwW",
+    "..............WwwwwMwwwMwwwwwW",
+    "..............WwwwwMwwwMwwwwwW",
+    "..............WwwwwwwwwwwwwwwW",
+    "..............WWWWWWWWWWWWWWWW",
+    ".....OOOO...........W..W......",
+    "...OOOOOOOO.....RRRRRRRRRRRR..",
+    "..SOOOOOOOOS....N.N.N..N.N.N..",
+    ".OSOOOOOOOOSO....N.N.NN.N.N...",
+    ".OOSOOOOOOSOO.....N.N..N.N....",
+    "OOOSOEOOEOSOOO....NN.NN.NN....",
+    "OOOSOEOOEOSOOO.....N.NN.N.....",
+    "SSSSOOOOOOSSSS................",
+    "OOOSOmOOmOSOOO................",
+    "OOOSOOmmOOSOOO................",
+    ".OOSOOOOOOSOO.................",
+    ".OSOOOOOOOOSO.................",
+    "..SOOOOOOOOS..................",
+    "...OOOOOOOO...................",
+    ".....OOOO....................."
+  ]
+}
